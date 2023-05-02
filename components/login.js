@@ -1,7 +1,7 @@
-// components/login.js
 import React, { Component } from 'react';
 import { StyleSheet, Text, View, TextInput, Button, Alert, ActivityIndicator, Image } from 'react-native';
 import firebase from '../database/firebase';
+import PasswordInput from './PasswordInput';
 
 export default class Login extends Component {
   
@@ -22,23 +22,22 @@ export default class Login extends Component {
     if(this.state.email === '' && this.state.password === '') {
       Alert.alert('Enter details to signin!')
     } else {
-      this.setState({
-        isLoading: true,
-      })
       try {
         const res = await firebase.auth().signInWithEmailAndPassword(this.state.email, this.state.password)
-        this.setState({
-          isLoading: false,
-          email: '', 
-          password: ''
-        })
-        if(this.state.email === "admin@gmail.com"){
-          this.props.navigation.navigate('./HSE/main_hse.js')
+
+        if(this.state.email.toString() === "admin@gmail.com"){
+          console.log("working")
+          this.props.navigation.navigate('MainHse')
         }
         else{
         console.log('User logged-in successfully!')
-        this.props.navigation.navigate('Dashboard')
+        this.props.navigation.navigate('EmpTabs', { screen: 'Risks' });
       }
+      this.setState({
+        isLoading: false,
+        email: '', 
+        password: ''
+      })
       } catch (error) {
         console.log(error)
         Alert.alert('Error signing in', error.message)
@@ -55,7 +54,7 @@ export default class Login extends Component {
     }    
     return (
       <View style={styles.container}>  
-      <Image source={require('../src/images/download.png')} style={styles.logo} />
+        <Image source={require('../src/images/logo.png')} style={styles.logo} />
         <Text  style={styles.heading} >Login to HSE App</Text>
         <TextInput
           style={styles.inputStyle}
@@ -63,27 +62,26 @@ export default class Login extends Component {
           value={this.state.email}
           onChangeText={(val) => this.updateInputVal(val, 'email')}
         />
-        <TextInput
-          style={styles.inputStyle}
+        <PasswordInput
           placeholder="Password"
           value={this.state.password}
           onChangeText={(val) => this.updateInputVal(val, 'password')}
-          maxLength={15}
-          secureTextEntry={true}
-        />   
+        />
         <Button
           title="Sign In"
           onPress={() => this.userLogin()}
         />   
-        <Text 
-          style={styles.loginText}
-          onPress={() => this.props.navigation.navigate('Signup')}>
-          Don't have an account?  SignUp here 
+        
+        <Text style={{marginTop: 25, textAlign: 'center'}}>
+          Don't have an account?
+          <Text style={styles.loginText}
+          onPress={() => this.props.navigation.navigate('Signup')}> SignUp here</Text> 
         </Text>                          
       </View>
     );
   }
 }
+
 const styles = StyleSheet.create({
   container: {
     flex: 1,
@@ -101,8 +99,9 @@ const styles = StyleSheet.create({
     paddingHorizontal: 10,
     backgroundColor:'#f2f2f2'
 },
+
 buttonContainer: {
-backgroundColor: "#ff2323",
+backgroundColor: "#3740FE",
 borderRadius: 5,
 height: 50,
 flexDirection: "row",

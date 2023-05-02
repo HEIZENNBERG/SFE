@@ -2,6 +2,7 @@
 import React, { Component } from 'react';
 import { StyleSheet, Text, View, TextInput, Button, Alert, ActivityIndicator } from 'react-native';
 import firebase from '../database/firebase';
+import PasswordInput from './PasswordInput';
 
 export default class Signup extends Component {
   static navigationOptions = {
@@ -10,9 +11,11 @@ export default class Signup extends Component {
   constructor() {
     super();
     this.state = { 
-      displayName: '',
+      firstName: '',
+      lastName: '',
+      number:'',
       email: '', 
-      password: '',
+      password: '',  
       isLoading: false
     }
   }
@@ -22,7 +25,7 @@ export default class Signup extends Component {
     this.setState(state);
   }
   registerUser = () => {
-    if(this.state.email === '' && this.state.password === '') {
+    if(this.state.email === '' && this.state.password === '' && this.state.number ===''&& this.state.lastName ===''&& this.state.firstName ==='') {
       Alert.alert('Enter details to signup!')
     } else {
       this.setState({
@@ -36,13 +39,12 @@ export default class Signup extends Component {
         const workerRef = firebase.firestore().collection('workers').doc(res.user.uid);
         workerRef.set({
           firstName: this.state.firstName,
-          lastName: this.state.lastName
+          lastName: this.state.lastName,
+          number: this.state.number,
+          email: this.state.email
         })
         .then(() => {
           console.log('Worker created successfully!')
-          res.user.updateProfile({
-            displayName: this.state.firstName + ' ' + this.state.lastName
-          })
           console.log('User registered successfully!')
           this.setState({
             isLoading: false,
@@ -96,18 +98,21 @@ export default class Signup extends Component {
         /> 
         <TextInput
           style={styles.inputStyle}
+          placeholder="phone number"
+          value={this.state.number}
+          onChangeText={(val) => this.updateInputVal(val, 'number')}
+        /> 
+        <TextInput
+          style={styles.inputStyle}
           placeholder="Email"
           value={this.state.email}
           onChangeText={(val) => this.updateInputVal(val, 'email')}
         />
-        <TextInput
-          style={styles.inputStyle}
+        <PasswordInput
           placeholder="Password"
           value={this.state.password}
           onChangeText={(val) => this.updateInputVal(val, 'password')}
-          maxLength={15}
-          secureTextEntry={true}
-        />   
+        />
         <View style={styles.button}>
           <Button
             title="Sign Up"
@@ -115,11 +120,13 @@ export default class Signup extends Component {
           />
         </View>
         <View style={styles.loginTextContainer}>
-          <Text 
-            style={[styles.loginText, styles.loginLink]}
-            onPress={() => this.props.navigation.navigate('Login')}>
-            Already have an account? Login
-          </Text>  
+          <Text style={{marginTop: 25,
+          textAlign: 'center'}}> Already have an account?
+            <Text 
+              style={[styles.loginText, styles.loginLink]}
+              onPress={() => this.props.navigation.navigate('Login')}> Login
+            </Text>  
+          </Text>
         </View>                       
       </View>
     );

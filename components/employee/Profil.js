@@ -1,8 +1,8 @@
-// HSE/main_hse.js
+// components/Profil.js
 import React, { Component } from 'react';
 import { StyleSheet, View, Text, Button } from 'react-native';
-import firebase from '../database/firebase';
-export default class main_hse extends Component {
+import firebase from '../../database/firebase';
+export default class Profil extends Component {
   constructor() {
     super();
     this.state = { 
@@ -23,7 +23,7 @@ export default class main_hse extends Component {
     return (
       <View style={styles.container}>
         <Text style = {styles.textStyle}>
-          Hello, {this.state.displayName}
+          Hello, user {this.state.displayName}
         </Text>
         <Button
           color="#3740FE"

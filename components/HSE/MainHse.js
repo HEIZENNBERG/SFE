@@ -1,8 +1,8 @@
-// components/dashboard.js
+// HSE/main_hse.js
 import React, { Component } from 'react';
 import { StyleSheet, View, Text, Button } from 'react-native';
-import firebase from '../database/firebase';
-export default class Dashboard extends Component {
+import firebase from '../../database/firebase';
+export default class MainHse extends Component {
   constructor() {
     super();
     this.state = { 
@@ -23,7 +23,7 @@ export default class Dashboard extends Component {
     return (
       <View style={styles.container}>
         <Text style = {styles.textStyle}>
-          Hello, {this.state.displayName}
+          Hello, this is hse team{this.state.displayName}
         </Text>
         <Button
           color="#3740FE"

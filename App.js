@@ -1,30 +1,34 @@
 // App.js
 import * as React from 'react';
-import { NavigationContainer } from '@react-navigation/native';
+
 import { createStackNavigator } from '@react-navigation/stack';
+import { NavigationContainer } from '@react-navigation/native';
 import Login from './components/login';
 import Signup from './components/signup';
-import Dashboard from './components/dashboard';
+import MainHse from './components/HSE/MainHse';
+import { EmpTabs } from './components/employee/EmpTabs';
+
 const Stack = createStackNavigator();
-function MyStack() {
+function AuthStack() {
   return (
     <Stack.Navigator
       initialRouteName="Login"
+
       >
       <Stack.Screen 
         name="Signup" 
-        component={Signup} 
-        options={{ headerShown: false }} 
+        component={Signup}
+        options={{ headerShown: false }}  
       />       
       <Stack.Screen 
         name="Login" 
         component={Login} 
         options={{ headerShown: false }} 
       />
-      <Stack.Screen 
-       name="Dashboard" 
-       component={Dashboard} 
-       options={{ headerShown: false }} 
+        <Stack.Screen 
+        name="MainHse" 
+        component={MainHse}
+        options={{ headerShown: false }}  
       />
     </Stack.Navigator>
   );
@@ -32,7 +36,18 @@ function MyStack() {
 export default function App() {
   return (
     <NavigationContainer>
-      <MyStack />
+      <Stack.Navigator initialRouteName="Auth">
+        <Stack.Screen
+          name="Auth"
+          component={AuthStack}
+          options={{ headerShown: false }}
+        />
+        <Stack.Screen
+          name="EmpTabs"
+          component={EmpTabs}
+          options={{ headerShown: false }}
+        />
+      </Stack.Navigator>
     </NavigationContainer>
   );
 }
