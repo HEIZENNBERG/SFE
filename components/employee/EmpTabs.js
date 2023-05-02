@@ -14,12 +14,12 @@ function EmpTabs() {
         tabBarShowLabel: false,
         tabBarStyle: {
           position: 'absolute',
-          backgroundColor: '#ffffff',
+          backgroundColor: '#efebfd',
           borderTopLeftRadius: 15,
           borderTopRightRadius: 15,
           borderBottomLeftRadius: 0,
           borderBottomRightRadius: 0,
-          height: 60,
+          height: 75,
           ...styles.shadow,
         },
       }}
@@ -29,7 +29,7 @@ function EmpTabs() {
         component={Risks}
         options={{
           tabBarIcon: ({ focused }) => (
-            <View style={{ alignItems: 'center', justifyContent: 'center', top: 2 }}>
+            <View style={{ alignItems: 'center', justifyContent: 'center', top: 2 , marginBottom: 10}}>
               <Image
                 source={require('../../src/images/risks.png')}
                 resizeMode="contain"
@@ -49,7 +49,7 @@ function EmpTabs() {
         component={Report}
         options={{
           tabBarIcon: ({ focused }) => (
-            <View style={{ alignItems: 'center', justifyContent: 'center', top: 2 }}>
+            <View style={{ alignItems: 'center', justifyContent: 'center', top: 2, marginBottom: 10 }}>
               <Image
                 source={require('../../src/images/report.png')}
                 resizeMode="contain"
@@ -70,7 +70,7 @@ function EmpTabs() {
         component={Profil}
         options={{
           tabBarIcon: ({ focused }) => (
-            <View style={{ alignItems: 'center', justifyContent: 'center', top: 2 }}>
+            <View style={{ alignItems: 'center', justifyContent: 'center', top: 2, marginBottom: 10 }}>
               <Image
                 source={require('../../src/images/profil.png')}
                 resizeMode="contain"
