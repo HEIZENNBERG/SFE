@@ -1,6 +1,6 @@
 // App.js
 import * as React from 'react';
-
+import { StatusBar } from 'react-native';
 import { createStackNavigator } from '@react-navigation/stack';
 import { NavigationContainer } from '@react-navigation/native';
 import Login from './components/login';
@@ -13,7 +13,6 @@ function AuthStack() {
   return (
     <Stack.Navigator
       initialRouteName="Login"
-
       >
       <Stack.Screen 
         name="Signup" 
@@ -35,19 +34,22 @@ function AuthStack() {
 }
 export default function App() {
   return (
-    <NavigationContainer>
-      <Stack.Navigator initialRouteName="Auth">
-        <Stack.Screen
-          name="Auth"
-          component={AuthStack}
-          options={{ headerShown: false }}
-        />
-        <Stack.Screen
-          name="EmpTabs"
-          component={EmpTabs}
-          options={{ headerShown: false }}
-        />
-      </Stack.Navigator>
-    </NavigationContainer>
+    <>
+      <StatusBar hidden={false} />
+      <NavigationContainer>
+        <Stack.Navigator initialRouteName="Auth">
+          <Stack.Screen
+            name="Auth"
+            component={AuthStack}
+            options={{ headerShown: false }}
+          />
+          <Stack.Screen
+            name="EmpTabs"
+            component={EmpTabs}
+            options={{ headerShown: false }}
+          />
+        </Stack.Navigator>
+      </NavigationContainer>
+    </>
   );
 }
