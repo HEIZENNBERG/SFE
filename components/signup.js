@@ -41,7 +41,8 @@ export default class Signup extends Component {
           firstName: this.state.firstName,
           lastName: this.state.lastName,
           number: this.state.number,
-          email: this.state.email
+          email: this.state.email,
+          image : ""
         })
         .then(() => {
           console.log('Worker created successfully!')

@@ -1,12 +1,13 @@
 import React, { useEffect, useState } from 'react';
-import { View, Button, StyleSheet, SafeAreaView, TextInput } from 'react-native';
+import { View, Button, StyleSheet, SafeAreaView, Modal, TextInput } from 'react-native';
 import { ScrollView } from 'react-native-gesture-handler';
 import { Avatar, Title, Caption, Text, TouchableRipple } from 'react-native-paper';
 import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
 import firebase from '../../database/firebase';
-import { navigation } from '@react-navigation/native';
-
+import EditProfil from './EditProfil';
 const Profil = ({ route, navigation }) => {
+
+
 
   const logout = () => {
     firebase.auth().signOut()
@@ -14,14 +15,18 @@ const Profil = ({ route, navigation }) => {
       .catch(error => console.log(error));
   };
 
-  // const EditProfil = () => {
-  //   navigation.navigate('EditProfil');
-  // };
 
 
+  const handleEditProfilePress = () => {
+    setIsEditProfileModalVisible(true);
+  };
+
+  const handleEditProfileModalClose = () => {
+    setIsEditProfileModalVisible(false);
+  };
   const [user, setUser] = useState(null);
+  const [isEditProfileModalVisible, setIsEditProfileModalVisible] = useState(false);
   const userId = firebase.auth().currentUser.uid;
-  
   useEffect(() => {
 
     const ref = firebase.firestore()
@@ -37,6 +42,7 @@ const Profil = ({ route, navigation }) => {
 
 
     return (
+        
         <SafeAreaView style={styles.container}>
             <ScrollView> 
             <View style={styles.userInfoSection}>
@@ -47,9 +53,11 @@ const Profil = ({ route, navigation }) => {
                   height : 225,
 
                   }}>
-                    <Avatar.Image source={{uri: 'https://via.placeholder.com/150'}}
-                    size={80}
-                    style={{marginTop:80}} />
+                <Avatar.Image 
+                source={user?.image ? { uri: user.image } : require('../../src/images/profilPic.png')}
+                size={80}
+                style={{ marginTop: 80 }} 
+                />
 
                     <View style={{marginLeft: 20}}>
                         <Title style={[styles.title, {marginTop: 15, marginBottom: 5, color : '#fff', marginLeft:-10}]}>{user?.firstName} {user?.lastName}</Title>
@@ -72,11 +80,18 @@ const Profil = ({ route, navigation }) => {
                 </View>
                 <View style={styles.bottomButtons}>
                 <Button title="Log Out" onPress={() => {logout()}} />             
-                <Button title="Edit Profile" onPress={() => {}} />
+                <Button title="Edit Profile" onPress={() => {handleEditProfilePress()}} />
                 
                 </View>
             </View>
-                  
+            <Modal visible={isEditProfileModalVisible} animationType="slide"  transparent={true}>
+                <EditProfil onClose={handleEditProfileModalClose}
+                firstNameRef={user?.firstName}
+                lastNameRef={user?.lastName}
+                numberRef={user?.number}
+                imageRef={user?.image}
+                />
+            </Modal> 
           
             </ScrollView>
         </SafeAreaView>
