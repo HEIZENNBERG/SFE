@@ -9,6 +9,8 @@
     "web": "expo start --web"
   },
   "dependencies": {
+    "@expo/vector-icons": "^13.0.0",
+    "@react-native-picker/picker": "^2.4.10",
     "@react-navigation/bottom-tabs": "^6.5.7",
     "@react-navigation/native": "^6.1.6",
     "@react-navigation/stack": "^6.3.16",
@@ -19,7 +21,9 @@
     "react": "18.2.0",
     "react-dom": "^18.2.0",
     "react-native": "0.71.7",
+    "react-native-check-box": "^2.1.7",
     "react-native-gesture-handler": "~2.9.0",
+    "react-native-image-picker": "^5.3.1",
     "react-native-paper": "^5.7.1",
     "react-native-web": "~0.18.11",
     "reanimated-bottom-sheet": "^1.0.0-alpha.22"

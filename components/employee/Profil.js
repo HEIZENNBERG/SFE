@@ -5,6 +5,9 @@ import { Avatar, Title, Caption, Text, TouchableRipple } from 'react-native-pape
 import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
 import firebase from '../../database/firebase';
 import EditProfil from './EditProfil';
+
+
+
 const Profil = ({ route, navigation }) => {
 
 

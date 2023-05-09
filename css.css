@@ -1,0 +1,65 @@
+/* div{
+  background-color: rgba(blue, blue, blue, 0.5) ;
+}
+
+
+registerUser = () => {
+  if(this.state.email === '' && this.state.password === '' && this.state.number ===''&& this.state.lastName ===''&& this.state.firstName ==='') {
+    Alert.alert('Enter details to Report!')
+  } else {
+    this.setState({
+      isLoading: true,
+    })
+    firebase
+    .auth()
+    .createUserWithEmailAndPassword(this.state.email, this.state.password)
+    .then((res) => {
+
+      const reportRef = firebase.firestore().collection('Reports').doc(res.user.uid);
+      reportRef.set({
+        service : this.state.service,
+        site: this.state.site,
+        gravite:this.state.gravite,
+        emplacement: this.state.emplacement, 
+        remonte: this.state.remonte,  
+        incident: this.state.incident,
+        accident : this.state.accident,
+        image: this.state.image,
+        date: this.state.date,
+        description:this.state.description,
+        status:this.state.status,
+      })
+      .then(() => {
+        console.log('Report successfully submited!')
+        this.setState({
+          isLoading: false,
+          service : '',
+          site: '',
+          gravite:'',
+          emplacement: '', 
+          remonte: '',  
+          type:'',
+          incident: '',
+          accident : '',
+          description:'',
+          status:'',
+        })
+        this.props.navigation.navigate('Login')
+      })
+      .catch(error => {
+        console.error('Error submitting Report: ', error);
+        this.setState({ 
+          isLoading: false, 
+          errorMessage: error.message 
+        });
+      });
+    })
+    .catch(error => {
+      console.error('Error submitting Report: ', error);
+      this.setState({ 
+        isLoading: false, 
+        errorMessage: error.message 
+      });
+    });      
+  }
+} */

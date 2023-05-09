@@ -30,20 +30,29 @@ const EditProfil = ({onClose,
 
 
     const handleSave = async () => {
-
-        const userRef = firebase.firestore().collection('workers').doc(firebase.auth().currentUser.uid);
+      const userRef = firebase.firestore().collection('workers').doc(firebase.auth().currentUser.uid);
+      if (image !== imageRef) {
         const response = await fetch(image);
         const blob = await response.blob();
         const storageRef = firebase.storage().ref().child(`ProfilPictures/${firebase.auth().currentUser.uid}.jpg`);
         await storageRef.put(blob);
-      
-
+        const downloadURL = await storageRef.getDownloadURL();
         await userRef.update({
           firstName : firstName,
           lastName : lastName,
           number: number,
-          image: image,
+          image: downloadURL,
         });
+      }else{
+        await userRef.update({
+          firstName : firstName,
+          lastName : lastName,
+          number: number,
+        });
+      }
+      
+
+
       
         onClose();
       };
@@ -169,4 +178,3 @@ const EditProfil = ({onClose,
   
   
   export default EditProfil;
-  
