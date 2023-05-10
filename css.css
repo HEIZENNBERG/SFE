@@ -1,7 +1,7 @@
 /* div{
   background-color: rgba(blue, blue, blue, 0.5) ;
 }
-
+d
 
 registerUser = () => {
   if(this.state.email === '' && this.state.password === '' && this.state.number ===''&& this.state.lastName ===''&& this.state.firstName ==='') {
@@ -63,3 +63,7 @@ registerUser = () => {
     });      
   }
 } */
+
+div{
+
+}

@@ -1,12 +1,12 @@
 import React, { useState } from 'react';
-import { StyleSheet, Text, View, TextInput, SafeAreaView, Button, Alert } from 'react-native';
+import { StyleSheet, Text, View, TextInput, SafeAreaView,Image, Button, Alert } from 'react-native';
 import firebase from '../../database/firebase';
 import { Picker } from '@react-native-picker/picker';
 import { RadioButton } from 'react-native-paper';
 import { ScrollView } from 'react-native-gesture-handler';
 import userInfo from './userInfo';
 import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
-import { MaterialIcons, Entypo, AntDesign, FontAwesome5  } from '@expo/vector-icons'; 
+import { MaterialIcons, Entypo, AntDesign, FontAwesome5,  Feather   } from '@expo/vector-icons'; 
 import * as ImagePicker from 'expo-image-picker';
 
 const Report = (props) => {
@@ -16,7 +16,9 @@ const Report = (props) => {
   const [gravite, setGravite] = useState('');
   const [emplacement, setEmplacement] = useState('');
   const [type, setType] = useState('');
-  const [images, setImages] = useState([]);
+  const [image1, setImage1] = useState('');
+  const [image2, setImage2] = useState('');
+  const [image3, setImage3] = useState('');
   const [date, setDate] = useState(new Date());
   const [description, setDescription] = useState('');
   const [status, setStatus] = useState('');
@@ -48,7 +50,7 @@ const Report = (props) => {
         setType(val);
         if (val === 'remonte') {
           setPickerOptions([
-            { label: 'Select a specific Remonte', value: '' },
+            { label: 'Select a specific Remonte', value: '',color:'red' },
             { label: 'Produits chimiques', value: 'Produits chimiques' },
             { label: 'Biologique (Legionellose)', value: 'Biologique (Legionellose)' },
             { label: 'Hygiene', value: 'Hygiene' },
@@ -76,14 +78,14 @@ const Report = (props) => {
           ]);
         } else if (val === 'incident') {
           setPickerOptions([
-            { label: 'Select a specific Incident', value: '' },
+            { label: 'Select a specific Incident', value: '',color:'red' },
             { label: 'Corporel', value: 'Corporel' },
             { label: ' Matériel', value: ' Matériel' },
             { label: 'Environnemental', value: 'Environnemental' }
           ]);
         } else if (val === 'accident') {
           setPickerOptions([
-            { label: 'Select a specific Accident', value: '' },
+            { label: 'Select a specific Accident', value: '',color:'red' },
             { label: 'ATAA', value: 'ATAA' },
             { label: 'ATPA', value: 'ATPA' },
             { label: 'ATSA', value: 'ATSA' },
@@ -121,41 +123,109 @@ const Report = (props) => {
     }
   };
 
-
+  const pickImage1 = async () => {
+    const result = await ImagePicker.launchImageLibraryAsync({
+        mediaTypes: ImagePicker.MediaTypeOptions.Images,
+        aspect: [1, 1],
+        quality: 1,
+    });
+  
+    if (!result.canceled) {
+        setImage1(result.assets[0].uri);
+    }else {
+      setImage1(null);
+    }
+  };
+  
+  const pickImage2 = async () => {
+    const result = await ImagePicker.launchImageLibraryAsync({
+        mediaTypes: ImagePicker.MediaTypeOptions.Images,
+        aspect: [1, 1],
+        quality: 1,
+    });
+  
+    if (!result.canceled) {
+        setImage2(result.assets[0].uri);
+    }else {
+      setImage2(null);
+    }
+  };
+  const pickImage3 = async () => {
+    const result = await ImagePicker.launchImageLibraryAsync({
+        mediaTypes: ImagePicker.MediaTypeOptions.Images,
+        aspect: [1, 1],
+        quality: 1,
+    });
+  
+    if (!result.canceled) {
+        setImage3(result.assets[0].uri);
+    }else {
+      setImage3(null);
+    }
+  };
   const handleReport = async () => {
 
 
     if (service==="" || site==="" || gravite==="" || emplacement==="" || type==="" || pickerValue==="" || description==="" || status==="" ) {
-    Alert.alert('Error', 'All fields are required');
+    Alert.alert('Error 404', 'All fields are required');
+    console.log('Error 404', 'All fields are required');
     } else {
     try {
 
-      
-    //const response = await fetch(images[0]);
-    // const blob = await response.blob();
-    // const ref = firebase.storage().ref().child(`reports/${user.uid}/SOR/${new Date().toISOString()}`);
-    // await ref.put(blob);
 
-    //const downloadUrl = await ref.getDownloadURL();
+      let download1 = "";
+      let download2 = "";
+      let download3 = "";
 
+      const ReportRef = firebase.firestore().collection('reports');
 
+      if (image1) {
 
-    const ReportRef = firebase.firestore().collection('reports');
-    ReportRef.add({
-      service : service,
-      site : site,
-      gravite : gravite,
-      emplacement : emplacement, 
-      type : type,
-      subType : pickerValue,
-      description : description,
-      status : status,
-      date : date,
-      user: firebase.auth().currentUser.uid,
-    })
-    .then(() => {
-      Alert.alert('Report submited successfully!');
-      console.log('Report submited successfully!')
+        const response1 = await fetch(image1);
+        const blob1 = await response1.blob();
+        const storageRef1 = firebase.storage().ref().child(`ReportPics/${firebase.auth().currentUser.uid}/${Math.floor(Math.random() * 1000)}`);
+        await storageRef1.put(blob1);
+        download1 = await storageRef1.getDownloadURL();
+
+      }
+
+      if (image2) {
+        const response2 = await fetch(image2);
+        const blob2 = await response2.blob();
+        const storageRef2 = firebase.storage().ref().child(`ReportPics/${firebase.auth().currentUser.uid}/${Math.floor(Math.random() * 1000)}`);
+        await storageRef2.put(blob2);
+        download2 = await storageRef2.getDownloadURL();
+      }
+
+      if (image3) {
+        const response3 = await fetch(image3);
+        const blob3 = await response3.blob();
+        const storageRef3 = firebase.storage().ref().child(`ReportPics/${firebase.auth().currentUser.uid}/${Math.floor(Math.random() * 1000)}`);
+        await storageRef3.put(blob3);
+        download3 = await storageRef3.getDownloadURL();
+      }
+      if(download1 ==="" && download2 ==="" && download3 =="")
+      {    
+        Alert.alert('Error 404', 'picuters are necessary');
+        console.log('Error 404', 'picuters are necessary');
+        }else{ReportRef.add({
+          service : service,
+          site : site,
+          gravite : gravite,
+          emplacement : emplacement, 
+          type : type,
+          image1 :download1,
+          image2 :download2,
+          image3 :download3,
+          subType : pickerValue,
+          description : description,
+          status : status,
+          date : date,
+          user: firebase.auth().currentUser.uid,
+        })
+
+        Alert.alert('Report submited successfully!');
+        console.log('Report submited successfully!')
         setService('');
         setSite('');
         setGravite('');
@@ -164,51 +234,25 @@ const Report = (props) => {
         setPickerValue('');
         setDescription('');
         setStatus('');
-    })
-    .catch(error => {
-      console.error('Error creating worker: ', error);
-      this.setState({ 
-        isLoading: false, 
-        errorMessage: error.message 
-      });
-    });
-
-
-
+      }
 
 
   } catch (error) {
     Alert.alert('Error', error.message);
+    console.log(error.messag)
     }
   
   };
-
-  // const openImagePicker = () => {
-  //   const options = {
-  //     mediaType: 'photo',
-  //     maxWidth: 300,
-  //     maxHeight: 300,
-  //     quality: 1,
-  //     selectionLimit: 3,
-  //   };
-  //   ImagePicker.launchImageLibraryAsync(options, (response) => {
-  //     if (response.didCancel) {
-  //       console.log('User cancelled image picker');
-  //     } else if (response.error) {
-  //       console.log('ImagePicker Error: ', response.error);
-  //     }else {
-  //       const images = [...images, ...response.assets.map((asset) => asset.uri)];
-  //       setImages(images);
-  //     }
-  //   });
-  };
-
+}
 
 
     return (
       <SafeAreaView style={styles.container}>
         <ScrollView> 
-          <Text  style={styles.heading} >Report</Text>
+                  <Image source={require('../../src/images/hseImage.png')} style={styles.hseImage} />
+          <Text  style={styles.heading} >Help us create a safe work environnement</Text>
+
+          <Feather name="chevrons-down" size={100} color="#2b72ff" style={{marginLeft:'37%' }} />
           <Text  style={styles.part1} >General Informations</Text>
 
           <View style={styles.row}>
@@ -227,7 +271,7 @@ const Report = (props) => {
               <Picker.Item label="RV3-EAF LF" value="RV3-EAF LF" />
               <Picker.Item label="Engins et Matériels Roulants" value="Engins et Matériels Roulants" />
               <Picker.Item label="RVFM-Moyens Généraux" value="RVFM-Moyens Généraux" />
-              <Picker.Item label="RVFM-Préparation Ferraille" value="Intitulé" />
+              <Picker.Item label="RVFM-Préparation Ferraille" value="RVFM-Préparation Ferraille" />
               <Picker.Item label="RVFM-RECaEPTION FERRAILLE" value="RVFM-RECaEPTION FERRAILLE" />
               <Picker.Item label="Service Four" value="Service Four" />
               <Picker.Item label="Service Informatique" value="Service Informatique" />
@@ -247,7 +291,7 @@ const Report = (props) => {
               <Picker.Item label="RV3-BM" value="RV3-BM" />
               <Picker.Item label="RV3-Electrique" value="RV3-Electrique" />
               <Picker.Item label="RV3-MAINTENANCE MECANIQUE & Hydraulique" value="RV3-MAINTENANCE MECANIQUE & Hydraulique" />
-              <Picker.Item label="IntService Ressources Humainesitulé" value="Intitulé" />
+              <Picker.Item label="IntService Ressources Humainesitulé" value="IntService Ressources Humainesitulé" />
 
 
             
@@ -371,6 +415,27 @@ const Report = (props) => {
             </Picker>
               </View>
 
+              
+          <View style={styles.AddImagesContainer}>
+          <Text style={styles.radioText}>Upload pictures for the event </Text>
+            <View style={styles.uploadImages}>
+                <View style={styles.imageConatainer}>
+                    <FontAwesome5 name="image" size={40} color="#777777"  onPress={pickImage1}/>
+                </View>
+                <View style={styles.imageConatainer}>
+                    <FontAwesome5 name="image" size={40} color="#777777"  onPress={pickImage2}/>
+                </View>           
+                <View style={styles.imageConatainer}>
+                    <FontAwesome5 name="image" size={40} color="#777777"  onPress={pickImage3}/>
+                </View>
+              </View>
+              <View style={styles.imagesUrl}>
+                <Text numberOfLines={1} ellipsizeMode='tail'>{image1}</Text>
+                <Text numberOfLines={1} ellipsizeMode='tail'>{image2}</Text>
+                <Text numberOfLines={1} ellipsizeMode='tail'>{image3}</Text>
+              </View>
+            </View> 
+
               <TextInput
                 editable
                 multiline
@@ -381,17 +446,7 @@ const Report = (props) => {
               onChangeText={(val) => updateInput(val, 'description')} 
         />
 
-
-            <View style={styles.imageConatainer}>
-              <Text>Upload pictures (max 3)</Text>
-              <FontAwesome5 name="images" size={40} color="#777777" />
-              {images.map((image, index) => (
-                <Image key={index} source={{ uri: image }} style={styles.selectedImage} />
-              ))}
-            </View>
-
-
-
+                 
             <View style={styles.status}>
               <RadioButton.Group
                 onValueChange={(value) => updateInput(value, 'status')}
@@ -430,6 +485,9 @@ const styles = StyleSheet.create({
     paddingVe: 35,
     
     backgroundColor: '#fff'
+  },
+  hseImage:{
+    width: 400, height: 400,
   },
   inputStyle: {
     height: 100,
@@ -476,6 +534,11 @@ color: "#fff",
 fontSize: 18,
 fontWeight: "bold",
 textTransform: "uppercase"
+},
+imagesUrl:{
+  marginLeft : 35,
+  marginRight : 35,
+  lineHeight : 50,
 },
 impostor:{
   height: 50,
@@ -536,15 +599,41 @@ status:{
   shadowOpacity: 0.5,
   shadowRadius: 4,
 },
-imageConatainer:{
-  alignItems : 'center',
-  paddingTop : '12%',
-  height : 150,
+AddImagesContainer:{
+  height : 200,
+  margin : 35,
   borderWidth : 1,
   backgroundColor : '#f3f3f3',
   borderRadius : 10,
   margin : 35,
   borderColor : '#f3f3f3',
+  shadowColor: '#000',
+  shadowOffset: {
+      width: 0,
+      height: 2,
+  },
+  shadowOpacity: 0.5,
+  shadowRadius: 4,
+},
+uploadImages:{
+  flex: 1,
+  flexDirection: 'row',
+  justifyContent: 'center',
+  marginBottom:15,
+  
+},
+imageConatainer:{
+  width : '20%',
+  paddingTop: 19,
+  paddingBottom:5,
+  alignItems: 'center',
+  borderWidth : 1,
+  backgroundColor : '#fff',
+  borderRadius : 10,
+  marginTop : 15,
+  marginLeft : 15,
+  marginRight : 15,
+  borderColor : '#ffff',
   shadowColor: '#000',
   shadowOffset: {
       width: 0,
@@ -571,10 +660,11 @@ radioButtonContainer:{
   marginTop : 15,
 },
 heading: {
-  fontSize: 24,
+  marginBottom : 15,
+  fontSize: 20,
   fontWeight: 'bold',
   textAlign: 'center',
-  marginBottom: 30,
+  color: '#2b72ff',
 },
 radioButtonLabel:{
   marginTop : 7,
@@ -584,7 +674,7 @@ button:{
   marginBottom : 90,
   marginLeft :100,
   marginRight : 100,
-  marginTop : 15,
+
 },
 pickerOptionContainer:{
   backgroundColor : '#f3f3f3',
