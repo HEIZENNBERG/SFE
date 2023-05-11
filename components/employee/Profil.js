@@ -5,10 +5,10 @@ import { Avatar, Title, Caption, Text, TouchableRipple } from 'react-native-pape
 import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
 import firebase from '../../database/firebase';
 import EditProfil from './EditProfil';
+import userInfo from './userInfo';
 
 
-
-const Profil = ({ route, navigation }) => {
+const Profil = ({ navigation }) => {
 
 
 
@@ -27,20 +27,9 @@ const Profil = ({ route, navigation }) => {
   const handleEditProfileModalClose = () => {
     setIsEditProfileModalVisible(false);
   };
-  const [user, setUser] = useState(null);
+  const user = userInfo(firebase.auth().currentUser.uid);
   const [isEditProfileModalVisible, setIsEditProfileModalVisible] = useState(false);
-  const userId = firebase.auth().currentUser.uid;
-  useEffect(() => {
 
-    const ref = firebase.firestore()
-      .collection('workers')
-      .doc(userId)
-      .onSnapshot(documentSnapshot => {
-        setUser(documentSnapshot.data());
-      });
-
-    return () => ref();
-  }, [route]);
 
 
 
@@ -58,7 +47,7 @@ const Profil = ({ route, navigation }) => {
                   }}>
                 <Avatar.Image 
                 source={user?.image ? { uri: user.image } : require('../../src/images/profilPic.png')}
-                size={80}
+                size={100}
                 style={{ marginTop: 80 }} 
                 />
 

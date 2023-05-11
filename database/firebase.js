@@ -4,13 +4,13 @@ import 'firebase/compat/firestore';
 import 'firebase/compat/storage';
 
 const firebaseconfig = {
-    apiKey: "AIzaSyBoUZcp9aGyDtTaMlifwHOCoBcZZt_Xuuo",
-    authDomain: "hseapp-3dd89.firebaseapp.com",
-    projectId: "hseapp-3dd89",
-    storageBucket: "hseapp-3dd89.appspot.com",
-    messagingSenderId: "112372769432",
-    appId: "1:112372769432:web:425d69d11041a7b86ee6ed",
-    measurementId: "G-T86NNW8ECF"
+    apiKey: "AIzaSyDNGGbxb0g261QZJhgODcZzdp5JSOgwf7k",
+    authDomain: "hseapp-71377.firebaseapp.com",
+    projectId: "hseapp-71377",
+    storageBucket: "hseapp-71377.appspot.com",
+    messagingSenderId: "105410173137",
+    appId: "1:105410173137:web:ff46bb27fd43cb1f34cdf0",
+    measurementId: "G-XPM0C5HJ5H"
 }
 
 if (!firebase.apps.length) {

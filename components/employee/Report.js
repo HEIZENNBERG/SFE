@@ -23,7 +23,7 @@ const Report = (props) => {
   const [description, setDescription] = useState('');
   const [status, setStatus] = useState('');
   const [pickerValue , setPickerValue] = useState('');
-  const user = userInfo();
+  const user = userInfo(firebase.auth().currentUser.uid);
 
   const [pickerOptions, setPickerOptions] = useState([
     { label: 'Select the report type ', value: '' },
@@ -163,16 +163,16 @@ const Report = (props) => {
       setImage3(null);
     }
   };
-  const handleReport = async () => {
 
+
+
+  const handleReport = async () => {
 
     if (service==="" || site==="" || gravite==="" || emplacement==="" || type==="" || pickerValue==="" || description==="" || status==="" ) {
     Alert.alert('Error 404', 'All fields are required');
     console.log('Error 404', 'All fields are required');
     } else {
     try {
-
-
       let download1 = "";
       let download2 = "";
       let download3 = "";
@@ -321,7 +321,7 @@ const Report = (props) => {
               selectedValue={emplacement}
               onValueChange={(itemValue) => updateInput(itemValue, 'emplacement')
               }>
-                            <Picker.Item label="Select an Emplacement" value="" color='red'/>
+                  <Picker.Item label="Select an Emplacement" value="" color='red'/>
               <Picker.Item label="AUXILIAIRES" value="AUXILIAIRES" />
               <Picker.Item label="CENTRALE HYD TRAIN LAMINAGE" value="CENTRALE HYD TRAIN LAMINAGE" />
               <Picker.Item label="ADMINISTRATION BATIMENT 2" value="ADMINISTRATION BATIMENT 2" />
@@ -408,7 +408,7 @@ const Report = (props) => {
               onValueChange={(itemValue) =>
                 updateInput(itemValue, 'gravite')
               }>
-                            <Picker.Item label="Select the Gravity" value="" color='red'/>
+                  <Picker.Item label="Select the Gravity" value="" color='red'/>
               <Picker.Item label="LOW" value="LOW" />
               <Picker.Item label="MEDIUM" value="MEDIUM" />
               <Picker.Item label="HIGH" value="HIGH" />
@@ -445,7 +445,6 @@ const Report = (props) => {
               value={description}
               onChangeText={(val) => updateInput(val, 'description')} 
         />
-
                  
             <View style={styles.status}>
               <RadioButton.Group
@@ -539,6 +538,7 @@ imagesUrl:{
   marginLeft : 35,
   marginRight : 35,
   lineHeight : 50,
+  height:70,
 },
 impostor:{
   height: 50,
@@ -624,7 +624,7 @@ uploadImages:{
 },
 imageConatainer:{
   width : '20%',
-  paddingTop: 19,
+  paddingTop: 12,
   paddingBottom:5,
   alignItems: 'center',
   borderWidth : 1,
