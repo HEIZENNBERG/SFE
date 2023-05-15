@@ -1,12 +1,9 @@
-    import { View, Text, ActivityIndicator, FlatList, StyleSheet, Image } from 'react-native'
+    import { View, Text, ActivityIndicator, FlatList, StyleSheet, SafeAreaView, Image } from 'react-native'
     import React, { useState, useEffect } from 'react';
     import firebase from '../../database/firebase';
     import { Entypo, AntDesign, MaterialIcons } from '@expo/vector-icons';
     import Swiper from 'react-native-swiper';
-
-
-
-
+import { ScrollView } from 'react-native-gesture-handler';
 
 
     const userInfo = async (userId , setUsers) => {
@@ -32,8 +29,14 @@
       const [reports, setReport] = useState([]); 
       const [users, setUsers] = useState({});
       const [expanded, setExpanded] = useState(false);
+      const [selectedSite, setSelectedSite] = useState('');
+      
 
+      const handleSiteClick = (siteName) => {
+        setSelectedSite(siteName);
+      };
 
+      
       useEffect(() => {
         const subscriber = firebase.firestore()
           .collection('reports')
@@ -62,122 +65,164 @@
         });
       }, [reports]);
 
+      let filteredReports;
+      if (selectedSite === "" || selectedSite === "ALL")
+     { filteredReports = reports;}
+      else
+       {filteredReports= reports.filter((report) => report.site === selectedSite);}
+
 
       if(!loading){
       return (
-        <FlatList
-          data={reports}
-          style={{marginBottom : 75}}
-          renderItem={({ item }) => { 
-            let graviteColor ;
-            switch (item.gravite) {
-              case 'LOW' :
-                graviteColor = "#e3c900";
-                break;
-              case 'MEDIUM' :
-                graviteColor = "#d57d00";
-                break;
-              case 'HIGH' :
-                graviteColor = "#bb2124";
-                break;
-            }
+        <ScrollView>
+          <SafeAreaView style={styles.filter}>
+            <Text
+              style={[ styles.site, selectedSite === '' || selectedSite === 'ALL'   ? styles.selectedSite   : null,    ]}
+              onPress={() => handleSiteClick('ALL')}
+            >ALL
+            </Text>
+            <Text
+              style={[ styles.site, selectedSite === 'RIVA 1' ? styles.selectedSite : null,    ]}
+              onPress={() => handleSiteClick('RIVA 1')}
+            >
+              RIVA 1
+            </Text>
+            <Text
+              style={[ styles.site, selectedSite === 'RIVA 2' ? styles.selectedSite : null,    ]}
+              onPress={() => handleSiteClick('RIVA 2')}
+            >
+              RIVA 2
+            </Text>
+            <Text
+              style={[ styles.site, selectedSite === 'RIVA 3' ? styles.selectedSite : null,    ]}
+              onPress={() => handleSiteClick('RIVA 3')}
+            >
+              RIVA 3
+            </Text>
+            <Text
+              style={[      styles.site,      selectedSite === 'ADMINISTRATION' ? styles.selectedSite : null,    ]}
+              onPress={() => handleSiteClick('ADMINISTRATION')}
+            >
+              ADMINISTRATION
+            </Text>
+          </SafeAreaView>
+
+          <ScrollView>
+                    <FlatList
+            data={filteredReports}
+            style={{marginBottom : 75}}
+            renderItem={({ item }) => { 
+              let graviteColor ;
+              switch (item.gravite) {
+                case 'LOW' :
+                  graviteColor = "#e3c900";
+                  break;
+                case 'MEDIUM' :
+                  graviteColor = "#d57d00";
+                  break;
+                case 'HIGH' :
+                  graviteColor = "#bb2124";
+                  break;
+              }
 
 
-            const images = [item.image1, item.image2, item.image3].filter(Boolean);
-            const user = users[item.user] || {};
-            const date = new Date(item.date.seconds * 1000); 
-            const formattedDate = date.toLocaleString('en-GB', {
-              day: '2-digit',
-              month: '2-digit',
-              year: 'numeric',
-              hour: '2-digit',
-              minute: '2-digit',
-              hour12: false
-            });
+              const images = [item.image1, item.image2, item.image3].filter(Boolean);
+              const user = users[item.user] || {};
+              const date = new Date(item.date.seconds * 1000); 
+              const formattedDate = date.toLocaleString('en-GB', {
+                day: '2-digit',
+                month: '2-digit',
+                year: 'numeric',
+                hour: '2-digit',
+                minute: '2-digit',
+                hour12: false
+              });
 
-            console.log(user)
-            return(
-            <View style={{ 
-              height: expanded ? 'auto' : 500,       
-              borderRadius : 15,
-              border : 1,
-              justifyContent: 'center',
-              display:'flex',
-              paddingLeft: 10,
-              paddingRight: 10,
-              paddingBottom: 10,
-              margin:10,
-              shadowColor: '#000',
-              shadowOffset: {
-                width: 0,
-                height: 2,
-              },
-              shadowOpacity: 0.7,
-              shadowRadius: 5,}}>
-              <View style={styles.infoBar}> 
-                <Image  style={{        
-                  borderColor :graviteColor,
-                  borderWidth : 3,
-                  padding : 1,
-                  margin : 5,
-                  width: 50, 
-                  height: 50, 
-                  borderRadius: 30 }} 
-                    source={user.image ? { uri: user.image } : require('../../src/images/profilPic.png')}
-                  />
-                <View style={styles.infoText}>
-                  <Text style={{fontWeight : '700'}}>{user.firstName} {user.lastName}</Text>
-                  <Text style={{fontSize :10 , marginTop: 5}}>{formattedDate}</Text>
-                </View>
-              </View>
-
-              <View style={styles.body}>
-
-              <View style={styles.location}>
-                  <MaterialIcons name="report-problem" size={15} color={graviteColor} />
-                  <Text style={{marginLeft : 5}}>{item.type} : {item.subType}</Text>
-                </View>
-
-                <View style={styles.location}>
-                  <Entypo name="location" size={15} color='#2b72ff' />
-                  <Text style={{marginLeft : 5}}>{item.emplacement} ({item.site})</Text>
-
-                </View>
-                <View style={styles.location}>
-                  <AntDesign name="setting" size={15} color='#2b72ff' />
-                  <Text style={{marginLeft : 5}}>{item.service}</Text>
-                </View>
-                
-                {expanded && (  
-                  <View>
-                  <Text style={{ marginTop: 3, paddingLeft: '20%' }}>
-                    <Text style={{ fontWeight: '500' }}>Status :</Text> {item.status} / <Text style={{ fontWeight: '500' }}>Gravity :</Text> {item.gravite}
-                  </Text>
-                    <Text style={{fontWeight : '500', marginTop: 3}}>description :</Text><Text>{item.description}</Text>
-                    <Text style={{color:'#2b72ff'}} onPress={() => setExpanded(expanded => !expanded)}>See less ...</Text>
-                  </View>
-                )}
-                {!expanded &&(
-                <Text style={{color:'#2b72ff'}} onPress={() => setExpanded(expanded => !expanded)}>See More ...</Text>
-                )}
-                  {images.length > 0 && (
-                <Swiper >
-                  {images.map((image, index) => (
-                    <Image
-                    resizeMode='cover'
-                      key={index}
-                      style={styles.reportPics}
-                      source={{ uri: image }}
+              console.log(user)
+              return(
+              <View style={{ 
+                height: expanded ? 'auto' : 500,       
+                borderRadius : 15,
+                border : 1,
+                justifyContent: 'center',
+                display:'flex',
+                paddingLeft: 10,
+                paddingRight: 10,
+                paddingBottom: 10,
+                margin:10,
+                shadowColor: '#000',
+                shadowOffset: {
+                  width: 0,
+                  height: 2,
+                },
+                shadowOpacity: 0.7,
+                shadowRadius: 5,}}>
+                <View style={styles.infoBar}> 
+                  <Image  style={{        
+                    borderColor :graviteColor,
+                    borderWidth : 3,
+                    padding : 1,
+                    margin : 5,
+                    width: 50, 
+                    height: 50, 
+                    borderRadius: 30 }} 
+                      source={user.image ? { uri: user.image } : require('../../src/images/profilPic.png')}
                     />
-                  ))}
-                </Swiper>
-              )}
-              </View>
-            </View>
-            );
-          }}
-        />
+                  <View style={styles.infoText}>
+                    <Text style={{fontWeight : '700'}}>{user.firstName} {user.lastName}</Text>
+                    <Text style={{fontSize :10 , marginTop: 5}}>{formattedDate}</Text>
+                  </View>
+                </View>
 
+                <View style={styles.body}>
+
+                <View style={styles.location}>
+                    <MaterialIcons name="report-problem" size={15} color={graviteColor} />
+                    <Text style={{marginLeft : 5}}>{item.type} : {item.subType}</Text>
+                  </View>
+
+                  <View style={styles.location}>
+                    <Entypo name="location" size={15} color='#2b72ff' />
+                    <Text style={{marginLeft : 5}}>{item.emplacement} ({item.site})</Text>
+
+                  </View>
+                  <View style={styles.location}>
+                    <AntDesign name="setting" size={15} color='#2b72ff' />
+                    <Text style={{marginLeft : 5}}>{item.service}</Text>
+                  </View>
+                  
+                  {expanded && (  
+                    <View>
+                    <Text style={{ marginTop: 3, paddingLeft: '20%' }}>
+                      <Text style={{ fontWeight: '500' }}>Status :</Text> {item.status} / <Text style={{ fontWeight: '500' }}>Gravity :</Text> {item.gravite}
+                    </Text>
+                      <Text style={{fontWeight : '500', marginTop: 3}}>description :</Text><Text>{item.description}</Text>
+                      <Text style={{color:'#2b72ff'}} onPress={() => setExpanded(expanded => !expanded)}>See less ...</Text>
+                    </View>
+                  )}
+                  {!expanded &&(
+                  <Text style={{color:'#2b72ff'}} onPress={() => setExpanded(expanded => !expanded)}>See More ...</Text>
+                  )}
+                    {images.length > 0 && (
+                  <Swiper >
+                    {images.map((image, index) => (
+                      <Image
+                      resizeMode='cover'
+                        key={index}
+                        style={styles.reportPics}
+                        source={{ uri: image }}
+                      />
+                    ))}
+                  </Swiper>
+                )}
+                </View>
+              </View>
+              );
+            }}
+          />
+          </ScrollView>
+
+        </ScrollView>
       );}
     }
     
@@ -190,6 +235,25 @@
         flexDirection: 'row',
         height : 50,
         top : 0,
+      },
+      filter:{
+        top: 0,
+        height : 45,
+        width : "100%",
+        flexDirection: 'row',
+        position : "sticky",
+        zIndex : 1,
+        backgroundColor : '#ffff',
+        paddingTop: 5,
+      },
+      site:{
+        backgroundColor : '#ccc',
+        borderRadius : 30,
+        margin : 6,
+        paddingLeft : 5,
+        paddingRight : 5,
+        height : 22,
+
       },
       infoText : {
         paddingTop : 8,
@@ -208,6 +272,10 @@
         marginTop:2.5,
         marginBottom:2,
   
+      },
+      selectedSite: {
+        backgroundColor: '#2b72ff',
+        color : "#ffff",
       },
       reportPics : {
         margin : 15,

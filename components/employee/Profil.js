@@ -9,7 +9,7 @@ import userInfo from './userInfo';
 
 
 const Profil = ({ navigation }) => {
-
+    console.log("testttt")
 
 
   const logout = () => {
@@ -27,6 +27,7 @@ const Profil = ({ navigation }) => {
   const handleEditProfileModalClose = () => {
     setIsEditProfileModalVisible(false);
   };
+
   const user = userInfo(firebase.auth().currentUser.uid);
   const [isEditProfileModalVisible, setIsEditProfileModalVisible] = useState(false);
 

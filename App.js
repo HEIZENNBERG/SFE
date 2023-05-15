@@ -3,7 +3,7 @@ import * as React from 'react';
 import { StatusBar } from 'react-native';
 import { createStackNavigator } from '@react-navigation/stack';
 import { NavigationContainer } from '@react-navigation/native';
-import Login from './components/employee/Risks';
+import Login from './components/login';
 import Signup from './components/signup';
 import MainHse from './components/HSE/MainHse';
 import { EmpTabs } from './components/employee/EmpTabs';
