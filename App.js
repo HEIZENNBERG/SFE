@@ -12,7 +12,7 @@ const Stack = createStackNavigator();
 function AuthStack() {
   return (
     <Stack.Navigator
-      initialRouteName="Login"
+      initialRouteName="MainHse"
       >
       <Stack.Screen 
         name="Signup" 

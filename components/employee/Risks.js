@@ -21,8 +21,6 @@ import { ScrollView } from 'react-native-gesture-handler';
       }
     };
 
-
-
     const Risks = () => {
       
       const [loading, setLoading] = useState(true); 

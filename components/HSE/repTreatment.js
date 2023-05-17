@@ -1,9 +1,10 @@
-import { View, Text, StyleSheet, TouchableOpacity, Image } from 'react-native'
-import React from 'react'
+import { View, Text, StyleSheet, TouchableOpacity, Image, TextInput } from 'react-native'
+import React, { useState } from 'react'
 import { Ionicons } from '@expo/vector-icons';
 import { ScrollView } from 'react-native-gesture-handler';
-import {MaterialIcons } from '@expo/vector-icons';
+import {MaterialIcons, FontAwesome5 } from '@expo/vector-icons';
 import Swiper from 'react-native-swiper';
+import * as ImagePicker from 'expo-image-picker';
 
 const repTreatment = ({
     onClose, 
@@ -12,6 +13,62 @@ const repTreatment = ({
 }) => {
 
 
+
+  const [treatAction , setTreatAction] = useState('');
+  const [imageTreat1, setImageTreat1] = useState('');
+  const [imageTreat2, setImageTreat2] = useState('');
+  const [imageTreat3, setImageTreat3] = useState('');
+  const images = [report.image1, report.image2, report.image3].filter(Boolean);
+  const date = new Date(report.date.seconds * 1000); 
+  const formattedDate = date.toLocaleString('en-GB', {
+    day: '2-digit',
+    month: '2-digit',
+    year: 'numeric',
+    hour: '2-digit',
+    minute: '2-digit',
+    hour12: false
+  });
+
+  const pickImage1 = async () => {
+    const result = await ImagePicker.launchImageLibraryAsync({
+        mediaTypes: ImagePicker.MediaTypeOptions.Images,
+        aspect: [1, 1],
+        quality: 1,
+    });
+  
+    if (!result.canceled) {
+        setImageTreat1(result.assets[0].uri);
+    }else {
+      setImageTreat1(null);
+    }
+  };
+  
+  const pickImage2 = async () => {
+    const result = await ImagePicker.launchImageLibraryAsync({
+        mediaTypes: ImagePicker.MediaTypeOptions.Images,
+        aspect: [1, 1],
+        quality: 1,
+    });
+  
+    if (!result.canceled) {
+        setImageTreat2(result.assets[0].uri);
+    }else {
+      setImageTreat2(null);
+    }
+  };
+  const pickImage3 = async () => {
+    const result = await ImagePicker.launchImageLibraryAsync({
+        mediaTypes: ImagePicker.MediaTypeOptions.Images,
+        aspect: [1, 1],
+        quality: 1,
+    });
+  
+    if (!result.canceled) {
+        setImageTreat3(result.assets[0].uri);
+    }else {
+      setImageTreat3(null);
+    }
+  };
   let graviteColor ;
   switch (report.gravite) {
     case 'LOW' :
@@ -24,25 +81,15 @@ const repTreatment = ({
       graviteColor = "#bb2124";
       break;
   }
-const images = [report.image1, report.image2, report.image3].filter(Boolean);
-  const date = new Date(report.date.seconds * 1000); 
-  const formattedDate = date.toLocaleString('en-GB', {
-    day: '2-digit',
-    month: '2-digit',
-    year: 'numeric',
-    hour: '2-digit',
-    minute: '2-digit',
-    hour12: false
-  });
+
 
   return (
-    <ScrollView style={styles.container}>
-    <Text style={{fontWeight : 500, fontSize : 22,}}>Report</Text>
+    <ScrollView style={styles.container} keyboardShouldPersistTaps="always">
     <TouchableOpacity style={styles.closeBTN} onPress={onClose}>
       <Ionicons name="close" size={24} color="gray" />
     </TouchableOpacity>  
 
-    <Text>Created By : </Text>
+    <Text style={{marginTop: 20, fontWeight : '600'}}>Reported By : </Text>
     <View style={styles.infoBar}> 
       <Image  style={{        
           padding : 1,
@@ -107,8 +154,43 @@ const images = [report.image1, report.image2, report.image3].filter(Boolean);
                 </View>
           <Text style={styles.subInfoTitle}>Report description : </Text>
           <Text style={styles.subInfo}>{report.description}</Text>
+          <Text style={styles.subInfoTitle}>Satuts : </Text>
+          <Text style={styles.subInfo}>{report.status}</Text>
       </View>
-                  
+      <View>
+        <Text style={{fontWeight : '600', marginBottom : 15, textAlign:'center', fontSize :16, color :"#2b72ff"}}>Report Treatment</Text>
+        <TextInput
+            
+            style={styles.inputStyle}
+            placeholder="Treatment Actions"
+            value={treatAction}
+            onChangeText={(val) => setTreatAction(val)} 
+        />
+
+          <Text style={styles.subInfoTitle}>Upload pictures after : </Text>
+
+          <View style={styles.AddImagesContainer}>
+          <Text style={styles.radioText}></Text>
+            <View style={styles.uploadImages}>
+                <View style={styles.imageConatainer}>
+                    <FontAwesome5 name="image" size={40} color="#777777"  onPress={pickImage1}/>
+                </View>
+                <View style={styles.imageConatainer}>
+                    <FontAwesome5 name="image" size={40} color="#777777"  onPress={pickImage2}/>
+                </View>           
+                <View style={styles.imageConatainer}>
+                    <FontAwesome5 name="image" size={40} color="#777777"  onPress={pickImage3}/>
+                </View>
+              </View>
+              <View style={styles.imagesUrl}>
+                <Text numberOfLines={1} ellipsizeMode='tail'>{imageTreat1}</Text>
+                <Text numberOfLines={1} ellipsizeMode='tail'>{imageTreat2}</Text>
+                <Text numberOfLines={1} ellipsizeMode='tail'>{imageTreat3}</Text>
+              </View>
+            </View> 
+
+
+      </View>
     </ScrollView>
   )
 }
@@ -176,6 +258,72 @@ const styles = StyleSheet.create({
      borderRadius : 5,
     alignItems : 'center',
     justifyContent : 'center',
-  }
+  },
+  AddImagesContainer:{
+    height : 200,
+    margin : 35,
+    borderWidth : 1,
+    backgroundColor : '#f3f3f3',
+    borderRadius : 10,
+    marginTop : 15,
+    borderColor : '#f3f3f3',
+    shadowColor: '#000',
+    shadowOffset: {
+        width: 0,
+        height: 2,
+    },
+    shadowOpacity: 0.5,
+    shadowRadius: 4,
+  },
+  uploadImages:{
+    flex: 1,
+    flexDirection: 'row',
+    justifyContent: 'center',
+    marginBottom:15,
+    
+  },
+  imageConatainer:{
+    width : '20%',
+    paddingTop: 12,
+    paddingBottom:5,
+    alignItems: 'center',
+    borderWidth : 1,
+    backgroundColor : '#fff',
+    borderRadius : 10,
+    marginTop : 15,
+    marginLeft : 15,
+    marginRight : 15,
+    borderColor : '#ffff',
+    shadowColor: '#000',
+    shadowOffset: {
+        width: 0,
+        height: 2,
+    },
+    shadowOpacity: 0.5,
+    shadowRadius: 4,
+  },
+  radioText:{
+    marginTop : 15 , 
+    color : 'blue',
+    marginLeft:10,
+  },
+  imagesUrl:{
+    marginLeft : 35,
+    marginRight : 35,
+    lineHeight : 50,
+    height:85,
+  },
+  inputStyle: {
+    height: 100,
+    borderWidth: 1,
+    borderColor: "#ccc",
+    borderRadius: 5,
+    marginBottom: 20,
+    paddingHorizontal: 10,
+    backgroundColor:'#f2f2f2',
+    marginLeft : 35,
+    marginRight : 35,
+    marginTop : 15,
 
+},
 })

@@ -99,8 +99,8 @@ const logout = () => {
       if(!loading){
       return (
         <View>
+        <SimpleLineIcons name="logout" size={24} color="blue" onPress={() => {logout()}} />
           <View style={styles.filter}>
-          <SimpleLineIcons name="logout" size={24} color="blue" onPress={() => {logout()}} />
             <Text
               style={[ styles.site, selectedSite === '' || selectedSite === 'ALL'   ? styles.selectedSite   : null,    ]}
               onPress={() => handleSiteClick('ALL')}
@@ -125,7 +125,7 @@ const logout = () => {
               RIVA 3
             </Text>
             <Text
-              style={[      styles.site,      selectedSite === 'ADMINISTRATION' ? styles.selectedSite : null,    ]}
+              style={[  styles.site,  selectedSite === 'ADMINISTRATION' ? styles.selectedSite : null,]}
               onPress={() => handleSiteClick('ADMINISTRATION')}
             >
               ADMINISTRATION
