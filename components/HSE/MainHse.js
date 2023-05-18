@@ -3,7 +3,6 @@
     import React, { useState, useEffect } from 'react';
     import firebase from '../../database/firebase';
     import { Entypo, AntDesign, MaterialIcons } from '@expo/vector-icons';
-    import Swiper from 'react-native-swiper';
     import { ScrollView } from 'react-native-gesture-handler';
     import { SimpleLineIcons } from '@expo/vector-icons';
     import RepTreatment from './repTreatment';
@@ -42,10 +41,11 @@ const logout = () => {
       const [isReportModalVisible, setIsReportModalVisible] = useState(false);
       const [selectedReport, setSelectedReport] = useState(null);
       const [selectedUser, setSelectedUser] = useState(null);
-      
+      const [selectedReportId, setSelectedReportId] = useState(null);      
 
 
-      const handleReportPress = (report, reporter) => {
+      const handleReportPress = (report, reporter, reportId) => {
+        setSelectedReportId(reportId);
         setSelectedReport(report);
         setSelectedUser(reporter);
         setIsReportModalVisible(true);
@@ -70,7 +70,7 @@ const logout = () => {
             querySnapshot.forEach(documentSnapshot => {
               reports.push({
                 ...documentSnapshot.data(),
-                key: documentSnapshot.id,
+                id: documentSnapshot.id,
               });
             });
       
@@ -137,6 +137,7 @@ const logout = () => {
             onClose={handleReportClose}
             report={selectedReport}
             reporter={selectedUser}
+            reportId = {selectedReportId}
           />
         </Modal>)}
           <ScrollView>
@@ -191,7 +192,7 @@ const logout = () => {
                 },
                 shadowOpacity: 0.7,
                 shadowRadius: 5,}}
-                onPress={ () => {handleReportPress(item, user)}}
+                onPress={ () => {handleReportPress(item, user, item.id)}}
 
                 >
                 <View style={styles.infoBar}> 
@@ -237,19 +238,23 @@ const logout = () => {
                     </View>
                   
                 </View>
-                <Modal visible={isReportModalVisible} animationType="slide">
-                  <RepTreatment onClose={handleReportClose}
-                    report = {selectedReport}
-                    reporter = {selectedUser}
-                  />
-                </Modal> 
+
               </TouchableOpacity>
               
               );
             }}
           />
           </ScrollView>
-
+          {selectedReport && (
+          <Modal visible={isReportModalVisible} animationType="slide">
+            <RepTreatment
+              onClose={handleReportClose}
+              report={selectedReport}
+              reporter={selectedUser}
+              reportId={selectedReportId}
+            />
+          </Modal>
+        )}
         </View>
       );}
     }
@@ -269,7 +274,6 @@ const logout = () => {
         height : 45,
         width : "100%",
         flexDirection: 'row',
-        position : "sticky",
         zIndex : 1,
         paddingTop: 5,
       },

@@ -1,24 +1,29 @@
-import { View, Text, StyleSheet, TouchableOpacity, Image, TextInput } from 'react-native'
+import { View, Text, StyleSheet, TouchableOpacity, Image, TextInput, SafeAreaView, Button, Alert } from 'react-native'
 import React, { useState } from 'react'
 import { Ionicons } from '@expo/vector-icons';
 import { ScrollView } from 'react-native-gesture-handler';
 import {MaterialIcons, FontAwesome5 } from '@expo/vector-icons';
-import Swiper from 'react-native-swiper';
+import Swiper from 'react-native-swiper-flatlist';
 import * as ImagePicker from 'expo-image-picker';
-
+import firebase from '../../database/firebase';
 const repTreatment = ({
     onClose, 
     report, 
-    reporter
+    reporter,
+    reportId
 }) => {
+console.log(reportId);
 
-
-
+  const reporterTreated = report.status === 'closed' && !report.TreatAction;
+  const HSEtreating = report.status === 'open';
+  const reportTreated = report.status === 'closed' && report.TreatAction;
   const [treatAction , setTreatAction] = useState('');
   const [imageTreat1, setImageTreat1] = useState('');
   const [imageTreat2, setImageTreat2] = useState('');
   const [imageTreat3, setImageTreat3] = useState('');
   const images = [report.image1, report.image2, report.image3].filter(Boolean);
+
+  const treatImages = [report.treatImage1, report.treatImage2, report.treatImage3].filter(Boolean);
   const date = new Date(report.date.seconds * 1000); 
   const formattedDate = date.toLocaleString('en-GB', {
     day: '2-digit',
@@ -29,6 +34,73 @@ const repTreatment = ({
     hour12: false
   });
 
+
+  const handleReport = async () => {
+
+    if (treatAction ===""  ) {
+    Alert.alert('Error 404', 'All fields are required');
+    console.log('Error 404', 'All fields are required');
+    } else {
+    try {
+      let download1 = "";
+      let download2 = "";
+      let download3 = "";
+
+      const treatmentRef = firebase.firestore().collection('reports').doc(reportId);
+      if (imageTreat1) {
+
+        const response1 = await fetch(imageTreat1);
+        const blob1 = await response1.blob();
+        const storageRef1 = firebase.storage().ref().child(`ReportPics/${Math.floor(Math.random() * 1000)}`);
+        await storageRef1.put(blob1);
+        download1 = await storageRef1.getDownloadURL();
+
+      }
+
+      if (imageTreat2) {
+        const response2 = await fetch(imageTreat2);
+        const blob2 = await response2.blob();
+        const storageRef2 = firebase.storage().ref().child(`ReportPics/${Math.floor(Math.random() * 1000)}`);
+        await storageRef2.put(blob2);
+        download2 = await storageRef2.getDownloadURL();
+      }
+
+      if (imageTreat3) {
+        const response3 = await fetch(imageTreat3);
+        const blob3 = await response3.blob();
+        const storageRef3 = firebase.storage().ref().child(`TreatmentReportPics/${Math.floor(Math.random() * 1000)}`);
+        await storageRef3.put(blob3);
+        download3 = await storageRef3.getDownloadURL();
+      }
+      if(download1 ==="" && download2 ==="" && download3 =="")
+      {    
+        Alert.alert('Error 404', 'picuters are necessary');
+        console.log('Error 404', 'picuters are necessary');
+        }else{
+          treatmentRef.set({
+            TreatAction: treatAction,
+            treatImage1: download1,
+            treatImage2: download2,
+            treatImage3: download3,
+            status: 'closed',
+          }, { merge: true });
+
+        Alert.alert('Report submited successfully!');
+        console.log('Report submited successfully!')
+        setTreatAction('');
+        setImageTreat1('');
+        setImageTreat2('');
+        setImageTreat3('');
+      }
+
+
+  } catch (error) {
+    Alert.alert('Error', error.message);
+    console.log(error.messag)
+    }
+  
+  };
+}
   const pickImage1 = async () => {
     const result = await ImagePicker.launchImageLibraryAsync({
         mediaTypes: ImagePicker.MediaTypeOptions.Images,
@@ -84,7 +156,7 @@ const repTreatment = ({
 
 
   return (
-    <ScrollView style={styles.container} keyboardShouldPersistTaps="always">
+    <ScrollView style={styles.container}>
     <TouchableOpacity style={styles.closeBTN} onPress={onClose}>
       <Ionicons name="close" size={24} color="gray" />
     </TouchableOpacity>  
@@ -140,16 +212,18 @@ const repTreatment = ({
           <View style={{marginTop : 10, height: 400}}>
           <Text style={styles.subInfoTitle}>Images before : </Text>
           {images.length > 0 && (
+            <ScrollView horizontal>
                   <Swiper >
                     {images.map((image, index) => (
                       <Image
-                      resizeMode='contain'
+                      resizeMode='cover'
                         key={index}
                         style={styles.reportPics}
                         source={{ uri: image }}
                       />
                     ))}
                   </Swiper>
+                 </ScrollView> 
                 )}
                 </View>
           <Text style={styles.subInfoTitle}>Report description : </Text>
@@ -159,14 +233,48 @@ const repTreatment = ({
       </View>
       <View>
         <Text style={{fontWeight : '600', marginBottom : 15, textAlign:'center', fontSize :16, color :"#2b72ff"}}>Report Treatment</Text>
-        <TextInput
-            
-            style={styles.inputStyle}
-            placeholder="Treatment Actions"
-            value={treatAction}
-            onChangeText={(val) => setTreatAction(val)} 
-        />
 
+        {reporterTreated &&(
+          <View style={styles.reporterTreated}> 
+          <Text style={{textAlign : 'center'}}>this Report was Closed By the reporter</Text>
+        </View>)}
+
+         {reportTreated &&(             
+        <View style={styles.reportTreated}>
+        <Text style={styles.subInfoTitle}>Images After : </Text>
+        {treatImages.length > 0 && (
+            <ScrollView horizontal>
+                  <Swiper >
+                    {treatImages.map((TreatImage, index) => (
+                      <Image
+                      resizeMode='cover'
+                        key={index}
+                        style={styles.reportPics}
+                        source={{ uri: TreatImage }}
+                      />
+                    ))}
+                  </Swiper>
+                 </ScrollView> 
+                )}
+                <Text style={styles.subInfoTitle}>Treatment actions : </Text>
+          <Text style={styles.subInfo}>{report.TreatAction}</Text>
+          </View>
+          )}
+
+
+          {HSEtreating &&(
+            <View style={styles.HSEtreating}>
+        <SafeAreaView>
+          <TextInput
+          editable
+              multiline={true}
+              numberOfLines={6}
+              style={styles.inputStyle}
+              placeholder="Treatment Actions"
+              value={treatAction}
+              onChangeText={(val) => setTreatAction(val)} 
+          />
+        </SafeAreaView>
           <Text style={styles.subInfoTitle}>Upload pictures after : </Text>
 
           <View style={styles.AddImagesContainer}>
@@ -187,9 +295,16 @@ const repTreatment = ({
                 <Text numberOfLines={1} ellipsizeMode='tail'>{imageTreat2}</Text>
                 <Text numberOfLines={1} ellipsizeMode='tail'>{imageTreat3}</Text>
               </View>
+              
             </View> 
 
-
+            <View style={styles.button}>
+          <Button
+            title="Submit"
+            onPress={handleReport}
+          />
+          </View>
+          </View>)}
       </View>
     </ScrollView>
   )
@@ -198,7 +313,6 @@ const repTreatment = ({
 export default repTreatment
 const styles = StyleSheet.create({
   container: {
-      flex: 1,
       backgroundColor: '#fff',
       padding: 20,
       elevation: 5,
@@ -253,8 +367,8 @@ const styles = StyleSheet.create({
   },
   reportPics : {
     margin : 15,
-     width: '100%', 
-     height:300,
+     width: 350, 
+     height : 350,
      borderRadius : 5,
     alignItems : 'center',
     justifyContent : 'center',
@@ -281,6 +395,12 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
     marginBottom:15,
     
+  },
+  button:{
+    marginBottom : 90,
+    marginLeft :100,
+    marginRight : 100,
+  
   },
   imageConatainer:{
     width : '20%',

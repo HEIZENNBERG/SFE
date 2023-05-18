@@ -2,8 +2,7 @@
     import React, { useState, useEffect } from 'react';
     import firebase from '../../database/firebase';
     import { Entypo, AntDesign, MaterialIcons } from '@expo/vector-icons';
-    import Swiper from 'react-native-swiper';
-import { ScrollView } from 'react-native-gesture-handler';
+    import Swiper from 'react-native-swiper-flatlist';
 
 
     const userInfo = async (userId , setUsers) => {
@@ -72,7 +71,7 @@ import { ScrollView } from 'react-native-gesture-handler';
 
       if(!loading){
       return (
-        <ScrollView>
+     
           <SafeAreaView style={styles.filter}>
             <Text
               style={[ styles.site, selectedSite === '' || selectedSite === 'ALL'   ? styles.selectedSite   : null,    ]}
@@ -103,9 +102,9 @@ import { ScrollView } from 'react-native-gesture-handler';
             >
               ADMINISTRATION
             </Text>
-          </SafeAreaView>
+          
 
-          <ScrollView>
+
                     <FlatList
             data={filteredReports}
             style={{marginBottom : 75}}
@@ -218,11 +217,10 @@ import { ScrollView } from 'react-native-gesture-handler';
               );
             }}
           />
-          </ScrollView>
-
-        </ScrollView>
-      );}
-    }
+          </SafeAreaView>
+      );
+      }
+    };
     
     export default Risks
 
