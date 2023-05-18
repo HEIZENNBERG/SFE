@@ -235,12 +235,12 @@ console.log(reportId);
         <Text style={{fontWeight : '600', marginBottom : 15, textAlign:'center', fontSize :16, color :"#2b72ff"}}>Report Treatment</Text>
 
         {reporterTreated &&(
-          <View style={styles.reporterTreated}> 
+          <View style={styles.last}> 
           <Text style={{textAlign : 'center'}}>this Report was Closed By the reporter</Text>
         </View>)}
 
          {reportTreated &&(             
-        <View style={styles.reportTreated}>
+        <View style={styles.last}>
         <Text style={styles.subInfoTitle}>Images After : </Text>
         {treatImages.length > 0 && (
             <ScrollView horizontal>
@@ -263,7 +263,7 @@ console.log(reportId);
 
 
           {HSEtreating &&(
-            <View style={styles.HSEtreating}>
+            <View style={styles.last}>
         <SafeAreaView>
           <TextInput
           editable
@@ -316,6 +316,7 @@ const styles = StyleSheet.create({
       backgroundColor: '#fff',
       padding: 20,
       elevation: 5,
+      paddingBottom: 50,
   },
   closeBTN: {
     position: 'absolute',
@@ -401,6 +402,9 @@ const styles = StyleSheet.create({
     marginLeft :100,
     marginRight : 100,
   
+  },
+  last:{
+    marginBottom: 30,
   },
   imageConatainer:{
     width : '20%',

@@ -27,7 +27,7 @@
       const [users, setUsers] = useState({});
       const [expanded, setExpanded] = useState(false);
       const [selectedSite, setSelectedSite] = useState('');
-      
+
 
       const handleSiteClick = (siteName) => {
         setSelectedSite(siteName);
@@ -72,7 +72,8 @@
       if(!loading){
       return (
      
-          <SafeAreaView style={styles.filter}>
+          <SafeAreaView >
+          <View style={styles.filter}>
             <Text
               style={[ styles.site, selectedSite === '' || selectedSite === 'ALL'   ? styles.selectedSite   : null,    ]}
               onPress={() => handleSiteClick('ALL')}
@@ -102,12 +103,10 @@
             >
               ADMINISTRATION
             </Text>
-          
-
-
+            </View>
                     <FlatList
             data={filteredReports}
-            style={{marginBottom : 75}}
+            style={{marginBottom : 120}}
             renderItem={({ item }) => { 
               let graviteColor ;
               switch (item.gravite) {
@@ -135,10 +134,10 @@
                 hour12: false
               });
 
-              console.log(user)
+              console.log(item)
               return(
               <View style={{ 
-                height: expanded ? 'auto' : 500,       
+                height: expanded ? 600 : 500,       
                 borderRadius : 15,
                 border : 1,
                 justifyContent: 'center',
@@ -212,6 +211,14 @@
                     ))}
                   </Swiper>
                 )}
+                      
+                {item.TreatAction != null &&(
+                  <View style={styles.treatmentHse}>
+                  <MaterialIcons name="verified" size={15} color="#2b72ff" />
+                  <Text>Treated by HSE Team</Text>
+                  </View>
+                  )}
+                  
                 </View>
               </View>
               );
@@ -237,7 +244,6 @@
         height : 45,
         width : "100%",
         flexDirection: 'row',
-        position : "sticky",
         zIndex : 1,
         backgroundColor : '#ffff',
         paddingTop: 5,
@@ -249,14 +255,12 @@
         paddingLeft : 5,
         paddingRight : 5,
         height : 22,
-
+        
       },
       infoText : {
         paddingTop : 8,
       },
-      profilPic:{
-
-      },  
+  
       body:{
         height : 50,
         display : 'flex',
@@ -269,14 +273,19 @@
         marginBottom:2,
   
       },
+      treatmentHse:{
+        flexDirection: 'row',
+        margin:2.5,
+        marginLeft:'25%',
+      },
       selectedSite: {
         backgroundColor: '#2b72ff',
         color : "#ffff",
       },
       reportPics : {
         margin : 15,
-         width: '100%', 
-         height:'100%',
+         width: 350, 
+         height:300,
          borderRadius : 5,
         alignItems : 'center',
         justifyContent : 'center',

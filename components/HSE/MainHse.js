@@ -1,10 +1,9 @@
 // HSE/main_hse.js    
-    import { View, Text, FlatList, StyleSheet, Modal, Image, TouchableOpacity, SafeAreaView } from 'react-native'
+    import { View, Text, FlatList, StyleSheet, Modal, Image, TouchableOpacity, Button } from 'react-native'
     import React, { useState, useEffect } from 'react';
     import firebase from '../../database/firebase';
-    import { Entypo, AntDesign, MaterialIcons } from '@expo/vector-icons';
+    import { Entypo, AntDesign, MaterialIcons, SimpleLineIcons } from '@expo/vector-icons';
     import { ScrollView } from 'react-native-gesture-handler';
-    import { SimpleLineIcons } from '@expo/vector-icons';
     import RepTreatment from './repTreatment';
 
 const logout = () => {
@@ -99,7 +98,10 @@ const logout = () => {
       if(!loading){
       return (
         <View>
-        <SimpleLineIcons name="logout" size={24} color="blue" onPress={() => {logout()}} />
+        <View style={styles.navBar}>
+        <AntDesign name="barschart" size={30} color="#2b72ff" />
+        <Text onPress={() => {logout()}} style={styles.button} >logout</Text>
+        
           <View style={styles.filter}>
             <Text
               style={[ styles.site, selectedSite === '' || selectedSite === 'ALL'   ? styles.selectedSite   : null,    ]}
@@ -131,6 +133,7 @@ const logout = () => {
               ADMINISTRATION
             </Text>
           </View>
+          </View>
           {selectedReport && (
         <Modal visible={isReportModalVisible} animationType="slide">
           <RepTreatment
@@ -143,7 +146,7 @@ const logout = () => {
           <ScrollView>
             <FlatList
             data={filteredReports}
-            style={{marginBottom : 75}}
+            style={{marginBottom : 75, marginTop: 0,}}
             renderItem={({ item }) => { 
               
 
@@ -175,7 +178,7 @@ const logout = () => {
               return(
               <TouchableOpacity 
                 style={{ 
-                height: 'auto',       
+                height: 185,       
                 borderRadius : 15,
                 border : 1,
                 justifyContent: 'center',
@@ -270,12 +273,12 @@ const logout = () => {
         top : 0,
       },
       filter:{
-        top: 0,
         height : 45,
         width : "100%",
         flexDirection: 'row',
-        zIndex : 1,
-        paddingTop: 5,
+        marginTop: 40,
+        left: 5,
+        position : 'absolute',
       },
       site:{
         backgroundColor : '#ccc',
@@ -315,5 +318,26 @@ const logout = () => {
          borderRadius : 5,
         alignItems : 'center',
         justifyContent : 'center',
-      }
+      },
+      button:{
+        backgroundColor : "#2b72ff",
+        height : 30,
+        width : 60,
+        color : '#fff',
+        borderRadius : 25,
+        fontWeight:500,
+        paddingTop : 3,
+        textAlign : 'center',
+        top : 10,
+        right : 10,
+        position :'absolute'
+      },
+      navBar:{
+        height: 80,
+        width : '100%',
+        padding : 10,
+        flexDirection: 'row',
+        zIndex : 1,
+        backgroundColor : '#efebfd',
+              },  
     });
