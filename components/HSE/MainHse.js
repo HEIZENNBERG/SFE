@@ -276,7 +276,7 @@ const logout = () => {
         height : 45,
         width : "100%",
         flexDirection: 'row',
-        marginTop: 40,
+        marginTop: 40add,
         left: 5,
         position : 'absolute',
       },
