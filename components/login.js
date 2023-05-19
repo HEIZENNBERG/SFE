@@ -25,9 +25,9 @@ export default class Login extends Component {
       try {
         const res = await firebase.auth().signInWithEmailAndPassword(this.state.email, this.state.password)
 
-        if(this.state.email.toString() === "admin@gmail.com"){
+        if(this.state.email.toString().toLowerCase() === "admin@gmail.com"){
           console.log("working")
-          this.props.navigation.navigate('MainHse')
+          this.props.navigation.navigate('HseTabs', { screen : 'MainHse'})
         }
         else{
         console.log('User logged-in successfully!')

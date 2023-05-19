@@ -5,14 +5,14 @@ import { createStackNavigator } from '@react-navigation/stack';
 import { NavigationContainer } from '@react-navigation/native';
 import Login from './components/login';
 import Signup from './components/signup';
-import MainHse from './components/HSE/MainHse';
+import { HseTabs } from './components/HSE/HseTabs';
 import { EmpTabs } from './components/employee/EmpTabs';
 
 const Stack = createStackNavigator();
 function AuthStack() {
   return (
     <Stack.Navigator
-      initialRouteName="MainHse"
+      initialRouteName="Login"
       >
       <Stack.Screen 
         name="Signup" 
@@ -24,11 +24,6 @@ function AuthStack() {
         component={Login} 
         options={{ headerShown: false }} 
       />
-        <Stack.Screen 
-        name="MainHse" 
-        component={MainHse}
-        options={{ headerShown: false }}  
-      />
     </Stack.Navigator>
   );
 }
@@ -37,7 +32,7 @@ export default function App() {
     <>
       <StatusBar hidden={false} />
       <NavigationContainer>
-        <Stack.Navigator initialRouteName="Auth">
+        <Stack.Navigator initialRouteName="HseTabs">
           <Stack.Screen
             name="Auth"
             component={AuthStack}
@@ -46,6 +41,11 @@ export default function App() {
           <Stack.Screen
             name="EmpTabs"
             component={EmpTabs}
+            options={{ headerShown: false }}
+          />
+          <Stack.Screen
+            name="HseTabs"
+            component={HseTabs}
             options={{ headerShown: false }}
           />
         </Stack.Navigator>

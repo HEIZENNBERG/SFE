@@ -6,11 +6,7 @@
     import { ScrollView } from 'react-native-gesture-handler';
     import RepTreatment from './repTreatment';
 
-const logout = () => {
-  firebase.auth().signOut()
-    .then(() => navigation.navigate('Login'))
-    .catch(error => console.log(error));
-};
+
 
 
 
@@ -99,8 +95,7 @@ const logout = () => {
       return (
         <View>
         <View style={styles.navBar}>
-        <AntDesign name="barschart" size={30} color="#2b72ff" />
-        <Text onPress={() => {logout()}} style={styles.button} >logout</Text>
+      
         
           <View style={styles.filter}>
             <Text
@@ -146,7 +141,7 @@ const logout = () => {
           <ScrollView>
             <FlatList
             data={filteredReports}
-            style={{marginBottom : 75, marginTop: 0,}}
+            style={{marginBottom : 100, marginTop: 0,}}
             renderItem={({ item }) => { 
               
 
@@ -178,7 +173,7 @@ const logout = () => {
               return(
               <TouchableOpacity 
                 style={{ 
-                height: 185,       
+                height: 180,       
                 borderRadius : 15,
                 border : 1,
                 justifyContent: 'center',
@@ -276,7 +271,6 @@ const logout = () => {
         height : 45,
         width : "100%",
         flexDirection: 'row',
-        marginTop: 40add,
         left: 5,
         position : 'absolute',
       },
@@ -333,7 +327,7 @@ const logout = () => {
         position :'absolute'
       },
       navBar:{
-        height: 80,
+        height: 45,
         width : '100%',
         padding : 10,
         flexDirection: 'row',

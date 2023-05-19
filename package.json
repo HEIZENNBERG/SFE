@@ -21,6 +21,7 @@
     "react": "18.2.0",
     "react-dom": "^18.2.0",
     "react-native": "0.71.7",
+    "react-native-chart-kit": "^6.12.0",
     "react-native-check-box": "^2.1.7",
     "react-native-deck-swiper": "^2.0.14",
     "react-native-gesture-handler": "~2.9.0",
@@ -34,7 +35,9 @@
     "react-native-swiper": "^1.6.0",
     "react-native-swiper-flatlist": "^3.2.2",
     "react-native-web": "~0.18.11",
-    "reanimated-bottom-sheet": "^1.0.0-alpha.22"
+    "reanimated-bottom-sheet": "^1.0.0-alpha.22",
+    "victory-native": "^36.6.10",
+    "react-native-svg": "13.4.0"
   },
   "devDependencies": {
     "@babel/core": "^7.20.0",
