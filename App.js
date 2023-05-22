@@ -32,7 +32,7 @@ export default function App() {
     <>
       <StatusBar hidden={false} />
       <NavigationContainer>
-        <Stack.Navigator initialRouteName="HseTabs">
+        <Stack.Navigator initialRouteName="Auth">
           <Stack.Screen
             name="Auth"
             component={AuthStack}

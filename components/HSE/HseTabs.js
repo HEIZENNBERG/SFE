@@ -3,7 +3,6 @@ import Stat from './Stat';
 import { StyleSheet, Text, View, } from 'react-native';
 import { FontAwesome, AntDesign, MaterialCommunityIcons  } from '@expo/vector-icons';
 import MainHse from './MainHse';
-import { useNavigation } from '@react-navigation/native';
 
  
 const Tab = createBottomTabNavigator();
@@ -28,7 +27,7 @@ function HseTabs({navigation}) {
           borderTopRightRadius: 15,
           borderBottomLeftRadius: 0,
           borderBottomRightRadius: 0,
-          height: 75,
+          height: 60,
           ...styles.shadow,
         },
       }}
