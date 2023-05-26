@@ -85,7 +85,7 @@ const Report = (props) => {
           ]);
         } else if (val === 'accident') {
           setPickerOptions([
-            { label: 'Select a specific Accident', value: '',color:'red' },
+            { label: 'Select a specific Accident', value: '', fontColor:'red' },
             { label: 'ATAA', value: 'ATAA' },
             { label: 'ATPA', value: 'ATPA' },
             { label: 'ATSA', value: 'ATSA' },
@@ -701,15 +701,14 @@ Icon:{
 },
 pickerContainer: {
   borderColor : '#fff',
-  height : 30,
   width: '90%',
   marginLeft : 15,
+  margingBottom: 10,
 },
 row: {
       flexDirection: 'row',
       height: 45,
       width: '80%' ,
-      paddingHorizontal: 6,
       marginLeft : 35,
       marginRight : 35,
       marginTop : 15,

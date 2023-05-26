@@ -85,8 +85,8 @@ console.log(reportId);
             status: 'closed',
           }, { merge: true });
 
-        Alert.alert('Report submited successfully!');
-        console.log('Report submited successfully!')
+        Alert.alert('Report traited successfully!');
+        console.log('Report traited successfully!')
         setTreatAction('');
         setImageTreat1('');
         setImageTreat2('');

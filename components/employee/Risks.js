@@ -126,8 +126,8 @@
               const user = users[item.user] || {};
               const date = new Date(item.date.seconds * 1000); 
               const formattedDate = date.toLocaleString('en-GB', {
+                month: 'short',
                 day: '2-digit',
-                month: '2-digit',
                 year: 'numeric',
                 hour: '2-digit',
                 minute: '2-digit',
@@ -139,6 +139,7 @@
               <View style={{ 
                 height: expanded ? 600 : 500,       
                 borderRadius : 15,
+                backgroundColor : '#fff',
                 border : 1,
                 justifyContent: 'center',
                 display:'flex',

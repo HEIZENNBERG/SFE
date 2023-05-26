@@ -6,10 +6,6 @@
     import { ScrollView } from 'react-native-gesture-handler';
     import RepTreatment from './repTreatment';
 
-
-
-
-
     const userInfo = async (userId , setUsers) => {
       try {
         const userRef = firebase.firestore().collection('workers').doc(userId);
@@ -162,7 +158,7 @@
               const date = new Date(item.date.seconds * 1000); 
               const formattedDate = date.toLocaleString('en-GB', {
                 day: '2-digit',
-                month: '2-digit',
+                month: 'short',
                 year: 'numeric',
                 hour: '2-digit',
                 minute: '2-digit',
@@ -268,6 +264,7 @@
         top : 0,
       },
       filter:{
+        paddingTop:5,
         height : 45,
         width : "100%",
         flexDirection: 'row',
@@ -331,7 +328,5 @@
         width : '100%',
         padding : 10,
         flexDirection: 'row',
-        zIndex : 1,
-        backgroundColor : '#efebfd',
-              },  
+        zIndex : 1,              },  
     });

@@ -1,0 +1,18 @@
+my HSE app is my intership project in RIVA INDUSTRY for my Technology University Degree 
+
+for more information about the application read RapportSfe 
+
+
+to run the HSE just open it in terminal and run 
+
+you need to install npm first
+
+$ npm install -g npm 
+
+$ npm install expo                         #this for epxo
+
+$ npm install                              #to install all the dependecies for the project
+
+$  npx expo start --tunnel                 #to run the project
+
+
