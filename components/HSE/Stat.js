@@ -1,19 +1,29 @@
 import React, { useEffect, useState } from 'react';
 import { View, Text, StyleSheet } from 'react-native';
-import { VictoryChart, VictoryBar, VictoryLabel , VictoryAxis, VictoryGroup, VictoryPie } from 'victory-native';
+import { VictoryChart, VictoryBar, VictoryLabel, VictoryAxis, VictoryGroup, VictoryPie } from 'victory-native';
 import firebase from '../../database/firebase';
 import { MaterialCommunityIcons } from '@expo/vector-icons';
 import { ScrollView } from 'react-native-gesture-handler';
+import { Picker } from '@react-native-picker/picker';
 
 const Stat = () => {
   const [monthlyReportCounts, setMonthlyReportCounts] = useState([]);
   const [yearlyReportCounts, setYearlyReportCounts] = useState([]);
-
+  const [selectedYear, setSelectedYear] = useState('');
+  const totalReports = yearlyReportCounts.reduce((total, item) => total + item.count, 0);
   useEffect(() => {
     const fetchReportData = async () => {
       const reportsRef = firebase.firestore().collection('reports');
-      const querySnapshot = await reportsRef.get();
-      
+      let query = reportsRef;
+
+      if (selectedYear) {
+        const startDate = new Date(selectedYear, 0, 1);
+        const endDate = new Date(selectedYear, 11, 31, 23, 59, 59);
+        query = query.where('date', '>=', startDate).where('date', '<=', endDate);
+      }
+
+      const querySnapshot = await query.get();
+
       const reportCountsByType = {
         incident: 0,
         accident: 0,
@@ -26,7 +36,7 @@ const Stat = () => {
 
         const reportDate = date.toDate();
 
-        const month = reportDate.getMonth(); 
+        const month = reportDate.getMonth();
         const year = reportDate.getFullYear();
         const currentYear = new Date().getFullYear();
 
@@ -55,7 +65,7 @@ const Stat = () => {
     };
 
     fetchReportData();
-  }, []);
+  }, [selectedYear]);
 
   const monthLabels = [
     'January',
@@ -75,18 +85,29 @@ const Stat = () => {
   return (
     <ScrollView>
       <Text style={styles.title}>Statistics</Text>
-      <Text style={{fontWeight : 'bold' , marginLeft : 15}}>the Bar Chart for the reports submited in {new Date().getFullYear()} for each month</Text>
+      <Picker
+        style={styles.pickerContainer}
+        selectedValue={selectedYear}
+        onValueChange={(itemValue) => setSelectedYear(itemValue)}>
+        <Picker.Item label="Select a year" value="" color="red" />
+        <Picker.Item label={String(new Date().getFullYear())} value={String(new Date().getFullYear())} />
+        <Picker.Item label={String(new Date().getFullYear() - 1)} value={String(new Date().getFullYear() - 1)} />
+      </Picker>
+
+      <Text style={{ fontWeight: 'bold', marginLeft: 15 }}>
+        Monthly reports for {selectedYear || new Date().getFullYear()} :
+      </Text>
 
       <View style={styles.chartInfo}>
-        <MaterialCommunityIcons name="moon-full" size={22} color="orange" style={{marginLeft: 15}} />
+        <MaterialCommunityIcons name="moon-full" size={22} color="orange" style={{ marginLeft: 15 }} />
         <Text>Incident</Text>
-        <MaterialCommunityIcons name="moon-full" size={22} color="blue" style={{marginLeft: 15}}/>
+        <MaterialCommunityIcons name="moon-full" size={22} color="blue" style={{ marginLeft: 15 }} />
         <Text>Accident</Text>
-        <MaterialCommunityIcons name="moon-full" size={22} color="red" style={{marginLeft: 15}}/>
+        <MaterialCommunityIcons name="moon-full" size={22} color="red" style={{ marginLeft: 15 }} />
         <Text>Remonte</Text>
       </View>
-      <VictoryChart >
-        <VictoryGroup offset={10} colorScale={['red', 'orange', 'bluev']}>
+      <VictoryChart>
+        <VictoryGroup offset={10} colorScale={['red', 'orange', 'blue']}>
           <VictoryBar
             data={monthlyReportCounts}
             x="month"
@@ -112,34 +133,32 @@ const Stat = () => {
             labelComponent={<VictoryLabel dy={-20} />}
           />
         </VictoryGroup>
-        <VictoryAxis tickFormat={(x) => monthLabels[x]}           
-            style={{
+        <VictoryAxis
+          tickFormat={(x) => monthLabels[x]}
+          style={{
             axisLabel: { padding: 30 },
             tickLabels: { angle: -45, fontSize: 8, textAnchor: 'end' },
-          }} 
-
-          />
-        <VictoryAxis
-          dependentAxis
-
-        />
-      </VictoryChart>
-        <Text style={{fontWeight : 'bold' , marginLeft : 15}}>the Pie Chart for the reports submited in {new Date().getFullYear()} </Text>
-        <VictoryPie
-          style={{ marginLeft: 50 }}
-          width={300}
-          height={200}
-          data={yearlyReportCounts}
-          x="type"
-          y="count"
-          colorScale={['orange', 'blue', 'red']}
-          labels={({ datum }) => {
-            const totalReports = yearlyReportCounts.reduce((total, item) => total + item.count, 0);
-            return `${Math.round((datum.count / totalReports) * 100)}%`;
           }}
         />
+        <VictoryAxis dependentAxis />
+      </VictoryChart>
+      <Text style={{ fontWeight: 'bold', marginLeft: 15 }}>
+        Total reports submitted in {selectedYear || new Date().getFullYear()} : {totalReports}
+      </Text>
+      <VictoryPie
+        style={{ marginLeft: 50 }}
+        width={300}
+        height={200}
+        data={yearlyReportCounts}
+        x="type"
+        y="count"
+        colorScale={['orange', 'blue', 'red']}
+        labels={({ datum }) => {
+          
+          return `${Math.round((datum.count / totalReports) * 100)}%`;
+        }}
+      />
 
-      
     </ScrollView>
   );
 };
@@ -165,6 +184,11 @@ const styles = StyleSheet.create({
     shadowRadius: 3.84,
     elevation: 5,
     marginBottom: 5,
+  },
+  pickerContainer: {
+    borderColor : '#fff',
+    width: '50%',
+    alignItems : 'center',
   },
   chartInfo:{
     width: '100%',

@@ -351,7 +351,7 @@ const styles = StyleSheet.create({
     },
     shadowOpacity: 0.7,
     shadowRadius: 5,
-    backgroundColor : "#ffff",
+    backgroundColor : "#ededed",
     padding : 5,
   },
   subInfo :{
