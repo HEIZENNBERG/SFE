@@ -104,6 +104,11 @@
               ADMINISTRATION
             </Text>
             </View>
+            {filteredReports.length === 0 ? (
+              <View  style={styles.emptyContainer}>
+                <Text>No reports found.</Text>
+              </View>
+             ) : (
                     <FlatList
             data={filteredReports}
             style={{marginBottom : 120}}
@@ -225,6 +230,7 @@
               );
             }}
           />
+          )}
           </SafeAreaView>
       );
       }
@@ -282,6 +288,12 @@
       selectedSite: {
         backgroundColor: '#2b72ff',
         color : "#ffff",
+      },
+      emptyContainer: {
+        marginTop : '65%',
+        flex: 1,
+        justifyContent: 'center',
+        alignItems: 'center',
       },
       reportPics : {
         margin : 15,

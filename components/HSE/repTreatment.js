@@ -408,8 +408,8 @@ const styles = StyleSheet.create({
   },
   imageConatainer:{
     width : '20%',
-    paddingTop: 12,
-    paddingBottom:5,
+    paddingTop: 3,
+
     alignItems: 'center',
     borderWidth : 1,
     backgroundColor : '#fff',

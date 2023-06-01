@@ -2,7 +2,7 @@
     import { View, Text, FlatList, StyleSheet, Modal, Image, TouchableOpacity, Button } from 'react-native'
     import React, { useState, useEffect } from 'react';
     import firebase from '../../database/firebase';
-    import { Entypo, AntDesign, MaterialIcons, SimpleLineIcons } from '@expo/vector-icons';
+    import { Entypo, AntDesign, MaterialIcons, MaterialCommunityIcons     } from '@expo/vector-icons';
     import { ScrollView } from 'react-native-gesture-handler';
     import RepTreatment from './repTreatment';
 
@@ -21,14 +21,14 @@
       }
     };
 
-
-
+    
     const MainHse = () => {
       
       const [loading, setLoading] = useState(true); 
       const [reports, setReport] = useState([]); 
       const [users, setUsers] = useState({});
       const [selectedSite, setSelectedSite] = useState('');
+      const [selectedStatus, setSelectedStatus] = useState('');
       const [isReportModalVisible, setIsReportModalVisible] = useState(false);
       const [selectedReport, setSelectedReport] = useState(null);
       const [selectedUser, setSelectedUser] = useState(null);
@@ -50,7 +50,9 @@
       const handleSiteClick = (siteName) => {
         setSelectedSite(siteName);
       };
-
+      const handleStatusClick = (statusName) => {
+        setSelectedStatus(statusName);
+      };
       
       useEffect(() => {
         const subscriber = firebase.firestore()
@@ -81,19 +83,26 @@
       }, [reports]);
 
       let filteredReports;
-      if (selectedSite === "" || selectedSite === "ALL")
+      if ((selectedSite === "" || selectedSite === "ALL") &&(selectedStatus === "" || selectedStatus ==="ALL"))
      { filteredReports = reports;}
-      else
+     else if ((selectedSite !== "" || selectedSite !== "ALL") &&(selectedStatus === "" || selectedStatus ==="ALL"))
        {filteredReports= reports.filter((report) => report.site === selectedSite);}
-
+       else if ((selectedSite === "" || selectedSite === "ALL") &&(selectedStatus !== "" || selectedStatus !=="ALL"))
+       {filteredReports= reports.filter((report) => report.status === selectedStatus);}
+      else
+       {filteredReports= reports.filter((report) => report.site === selectedSite && report.status === selectedStatus);}
+       
 
       if(!loading){
       return (
         <View>
-        <View style={styles.navBar}>
-      
-        
-          <View style={styles.filter}>
+        <View style={styles.navBar}> 
+        <View style={{flexDirection : 'row'}}>  
+        </View>
+     
+          <ScrollView horizontal={true} style={styles.filter}>
+          <Entypo  style={{marginTop : 6.5}} name="location-pin" size={25} color="#2b72ff" /> 
+          <Text style={{marginTop : 6.5}}> : </Text>
             <Text
               style={[ styles.site, selectedSite === '' || selectedSite === 'ALL'   ? styles.selectedSite   : null,    ]}
               onPress={() => handleSiteClick('ALL')}
@@ -123,8 +132,31 @@
             >
               ADMINISTRATION
             </Text>
+          </ScrollView>
+            <View style={styles.filter2}>
+            <MaterialCommunityIcons name="list-status" size={24} color="#2b72ff" style={{marginTop : 6.5}}/>
+            <Text style={{marginTop : 6.5}}> : </Text>
+              <Text
+                style={[ styles.Status, selectedStatus === '' || selectedStatus === 'ALL'   ? styles.selectedStatus   : null,    ]}
+                onPress={() => handleStatusClick('ALL')}
+              > ALL
+              </Text>
+              <Text
+                style={[ styles.Status, selectedStatus === 'open' ? styles.selectedStatus : null,    ]}
+                onPress={() => handleStatusClick('open')}
+              >
+                OPEN
+              </Text>
+              <Text
+                style={[ styles.Status, selectedStatus === 'closed' ? styles.selectedStatus : null,    ]}
+                onPress={() => handleStatusClick('closed')}
+              >
+                CLOSED
+              </Text>
+              
+            </View>
           </View>
-          </View>
+          
           {selectedReport && (
         <Modal visible={isReportModalVisible} animationType="slide">
           <RepTreatment
@@ -135,6 +167,11 @@
           />
         </Modal>)}
           <ScrollView>
+            {filteredReports.length === 0 ? (
+              <View  style={styles.emptyContainer}>
+                <Text>No reports found.</Text>
+              </View>
+          ) : (
             <FlatList
             data={filteredReports}
             style={{marginBottom : 100, marginTop: 0,}}
@@ -238,6 +275,7 @@
               );
             }}
           />
+           ) }
           </ScrollView>
           {selectedReport && (
           <Modal visible={isReportModalVisible} animationType="slide">
@@ -258,23 +296,38 @@
     const styles = StyleSheet.create({
       infoBar:{
         margin: 5, 
-        marginBottom : 15,
+        marginBottom : 5,
         flexDirection: 'row',
         height : 50,
         top : 0,
       },
       filter:{
-        paddingTop:5,
-        height : 45,
+        marginTop : 18,
+        
         width : "100%",
         flexDirection: 'row',
         left: 5,
-        position : 'absolute',
+      },
+      filter2:{
+        paddingTop:5,
+        width : "100%",
+        flexDirection: 'row',
+        left: 5,
+
       },
       site:{
         backgroundColor : '#ccc',
         borderRadius : 30,
-        margin : 6,
+        margin : 5,
+        paddingLeft : 5,
+        paddingRight : 5,
+        height : 22,
+
+      },
+      Status:{
+        backgroundColor : '#ccc',
+        borderRadius : 30,
+        margin : 5,
         paddingLeft : 5,
         paddingRight : 5,
         height : 22,
@@ -302,6 +355,10 @@
         backgroundColor: '#2b72ff',
         color : "#ffff",
       },
+      selectedStatus: {
+        backgroundColor: '#2b72ff',
+        color : "#ffff",
+      },
       reportPics : {
         margin : 15,
          width: '100%', 
@@ -309,6 +366,12 @@
          borderRadius : 5,
         alignItems : 'center',
         justifyContent : 'center',
+      },
+      emptyContainer: {
+        marginTop : '65%',
+        flex: 1,
+        justifyContent: 'center',
+        alignItems: 'center',
       },
       button:{
         backgroundColor : "#2b72ff",
@@ -324,9 +387,9 @@
         position :'absolute'
       },
       navBar:{
-        height: 45,
+        backgroundColor : '#efebfd',
+        height: 85,
         width : '100%',
-        padding : 10,
-        flexDirection: 'row',
-        zIndex : 1,              },  
+        zIndex : 1,             
+       },  
     });
